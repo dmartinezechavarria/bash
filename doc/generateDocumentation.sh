@@ -20,7 +20,7 @@ do
 done
 
 printtext "- Generating table of contents..."
-TOCTITLE=$'# Õndice\n\n'
+TOCTITLE=$'# √çndice\n\n'
 LINEBREAK=$'\n\n\n'
 echo "$TOCTITLE$($DOCPATH/generateTOC.sh < $DOCPATH/../$DOCFILENAME)$LINEBREAK" | cat - $DOCPATH/../$DOCFILENAME > temp && mv temp $DOCPATH/../$DOCFILENAME
 

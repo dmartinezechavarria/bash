@@ -14,7 +14,7 @@
 #
 rocketchatsendmessage () {
 
-    # Comprobamos los par·metros
+    # Comprobamos los par√°metros
     if [ -z "$1" ]
     then
         printerror "No channel provided"

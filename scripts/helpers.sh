@@ -36,7 +36,7 @@ printlinebreak () {
 # @arg $1 string Mensaje.
 #
 printtext () {
-    echo -e $1 >&2
+    printf "➜ $@\n"
 }
 
 ## 
@@ -48,7 +48,7 @@ printtext () {
 # @arg $1 string Mensaje.
 #
 printsuccess () {
-    printtext "$_BACKGROUNDGREEN_$_COLORWHITE_ $1 $_COLORDEFAULT_$_BACKGROUNDDEFAULT_"
+    printf "${_COLORGREEN_}✔ %s${_COLORDEFAULT_}\n" "$@"
 }
 
 ## 
@@ -60,7 +60,7 @@ printsuccess () {
 # @arg $1 string Mensaje.
 #
 printerror () {
-    printtext "$_BACKGROUNDRED_$_COLORWHITE_ $1 $_COLORDEFAULT_$_BACKGROUNDDEFAULT_"
+    printf "${_COLORRED_}✖ %s${_COLORDEFAULT_}\n" "$@"
 }
 
 ## 
@@ -72,7 +72,7 @@ printerror () {
 # @arg $1 string Mensaje.
 #
 printwarning () {
-    printtext "$_BACKGROUNDYELLOW_$_COLORBLACK_ $1 $_COLORDEFAULT_$_BACKGROUNDDEFAULT_"
+    printf "${_COLORYELLOW_}➜ %s${_COLORDEFAULT_}\n" "$@"
 }
 
 ## 
