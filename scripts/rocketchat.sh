@@ -18,12 +18,14 @@ rocketchatsendmessage () {
     if [ -z "$1" ]
     then
         printerror "No channel provided"
+        return 1
     else
         channel=$1
 
         if [ -z "$2" ]
         then
             printerror "No message provided"
+            return 1
         else
             message=$2
 

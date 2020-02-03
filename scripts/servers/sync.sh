@@ -17,6 +17,7 @@ syncservers () {
     if [ -z "$1" ]
     then
         printerror "No project provided"
+        return 1
     else
         project=$1
 
@@ -24,6 +25,7 @@ syncservers () {
         if [ -z "$2" ]
         then
             printerror "No environment provided"
+            return 1
         else
             env=$2
 
@@ -31,14 +33,14 @@ syncservers () {
             local projects=(pdc webadmin)
             if ! [[ " ${projects[@]} " =~ " ${project} " ]]; then
                 printerror "Project '$project' no exists"
-                return 0
+                return 1
             fi
 
             # Comprobamos que el entorno existe
             local environments=(pre pro)
             if ! [[ " ${environments[@]} " =~ " ${env} " ]]; then
                 printerror "Environment '$env' no exists"
-                return 0
+                return 1
             fi
 
             printtitle "Syncing project $_COLORYELLOW_$project$_COLORDEFAULT_ environment $_COLORGREEN_$env$_COLORDEFAULT_"

@@ -79,14 +79,17 @@ gitreleasestart () {
                 printtext "Use$_FONTBOLD_ gitreleasefinish$_FONTDEFAULT_ to finalize the release"
             else
                 printerror "Branch '$newBranch' already exists, do you have release in progress?"
+                return 1
             fi
 
             cd $pwd
         else
             printerror "Origin branch '$fromBranch' no exists"
+            return 1
         fi
     else
         printerror "Not a git repository (or any of the parent directories)"
+        return 1
     fi
 }
 
@@ -107,6 +110,7 @@ gitreleasemerge () {
         if [ -z "$1" ]
         then
             printerror "No merge branch provided"
+            return 1
         else
             fromBranch=$1
 
@@ -138,15 +142,18 @@ gitreleasemerge () {
                     printwarning "Remember to merge release changes on master and dev branchs before finalize it."
                 else
                     printerror "Branch '$newBranch' not exists, do you modify CHANGELOG.md file?"
+                    return 1
                 fi
 
                 cd $pwd
             else
                 printerror "Merge branch '$fromBranch' no exists"
+                return 1
             fi
         fi
     else
         printerror "Not a git repository (or any of the parent directories)"
+        return 1
     fi
 }
 
@@ -198,13 +205,16 @@ gitreleasefinish () {
                 printtext "Release$_FONTBOLD_ $version $_FONTDEFAULT_ finished succesfully"
             else
                 printerror "Branch '$newBranch' not exists, do you modify CHANGELOG.md file?"
+                return 1
             fi
 
             cd $pwd
         else
             printerror "Merge branch '$fromBranch' no exists"
+            return 1
         fi
     else
         printerror "Not a git repository (or any of the parent directories)"
+        return 1
     fi
 }

@@ -21,11 +21,13 @@ gitfeaturestart () {
         if [ -z "$1" ]
         then
             printerror "No feature name provided"
+            return 1
         else
             # Comprobamos si se pasa una rama de origen
             if [ -z "$2" ]
             then
                 printerror "No origin branch provided"
+                return 1
             else
                 fromBranch=$2
 
@@ -49,11 +51,13 @@ gitfeaturestart () {
                     printtext "Use$_FONTBOLD_ gitfeatureupdate $1 $2$_FONTDEFAULT_ to update feature from origin branch"
                 else
                     printerror "Origin branch '$fromBranch' no exists"
+                    return 1
                 fi
             fi
         fi
     else
         printerror "Not a git repository (or any of the parent directories)"
+        return 1
     fi
 }
 
@@ -76,11 +80,13 @@ gitfeaturefinish () {
         if [ -z "$1" ]
         then
             printerror "No feature name provided"
+            return 1
         else
             # Comprobamos si se pasa una rama de destino
             if [ -z "$2" ]
             then
                 printerror "No destiny branch provided"
+                return 1
             else
                 fromBranch=$2
 
@@ -104,14 +110,17 @@ gitfeaturefinish () {
                         printsuccess "Feature $1 finish successfully"
                     else
                         printerror "Feature '$1' no exists"
+                        return 1
                     fi
                 else
                     printerror "Origin branch '$fromBranch' no exists"
+                    return 1
                 fi
             fi
         fi
     else
         printerror "Not a git repository (or any of the parent directories)"
+        return 1
     fi
 }
 
@@ -133,11 +142,13 @@ gitfeatureupdate () {
         if [ -z "$1" ]
         then
             printerror "No feature name provided"
+            return 1
         else
             # Comprobamos si se pasa una rama de origen
             if [ -z "$2" ]
             then
                 printerror "No origin branch provided"
+                return 1
             else
                 fromBranch=$2
 
@@ -158,14 +169,17 @@ gitfeatureupdate () {
                         printsuccess "Feature $1 updated successfully"
                     else
                         printerror "Feature '$1' no exists"
+                        return 1
                     fi
                 else
                     printerror "Origin branch '$fromBranch' no exists"
+                    return 1
                 fi
             fi
         fi
     else
         printerror "Not a git repository (or any of the parent directories)"
+        return 1
     fi
 }
 
@@ -186,6 +200,7 @@ gitfeatureremote () {
         if [ -z "$1" ]
         then
             printerror "No feature name provided"
+            return 1
         else
             # Comprobamos que la rama feature existe
             local branches=($(git branch | grep "[^* ]+" -Eo))
@@ -201,9 +216,11 @@ gitfeatureremote () {
                 printsuccess "Feature $1 pushed to $remote successfully"
             else
                 printerror "Feature '$1' no exists"
+                return 1
             fi
         fi
     else
         printerror "Not a git repository (or any of the parent directories)"
+        return 1
     fi
 }

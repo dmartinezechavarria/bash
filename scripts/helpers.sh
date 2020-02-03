@@ -12,7 +12,7 @@
 # @noargs
 #
 printseparator () {
-    printf "$_FONTBOLD_%*s$_FONTDEFAULT_\n" "${COLUMNS:-$(tput cols)}" '' | tr ' ' - >&2
+    printf "$_FONTBOLD_%*s$_FONTDEFAULT_\n" "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
 }
 
 ## 
@@ -24,7 +24,7 @@ printseparator () {
 # @noargs
 #
 printlinebreak () {
-    echo "" >&2
+    echo ""
 }
 
 ## 
@@ -60,7 +60,7 @@ printsuccess () {
 # @arg $1 string Mensaje.
 #
 printerror () {
-    printf "${_COLORRED_}✖ %s${_COLORDEFAULT_}\n" "$@"
+    printf "${_COLORRED_}✖ %s${_COLORDEFAULT_}\n" "$@" >&2
 }
 
 ## 

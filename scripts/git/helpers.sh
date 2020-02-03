@@ -23,6 +23,7 @@ cdgit () {
         
         if (( ${#paths[@]} == 0 )); then
             printerror "No valid paths found"
+            return 1
         else
             if [[ " ${paths[@]} " =~ " ${path} " ]]; then
                 printtext "Go into $_FONTBOLD_${path}$_FONTDEFAULT_"
@@ -102,6 +103,7 @@ gitcheckoutall () {
     if [ -z "$1" ]
     then
         printerror "No branch supplied"
+        return 1
     else
         branch=$1
 
