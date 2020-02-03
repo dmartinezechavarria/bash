@@ -18,17 +18,17 @@ cdgit () {
         cd $GITROOT
     else
         cd $GITROOT
-        local path="$1/"
-        local paths=($(ls -d *))
+        local path="${1//[\/]}"
+        local paths=($(ls -d */ | while read path ; do echo ${path//[\/]} ; done;))
         
         if (( ${#paths[@]} == 0 )); then
             printerror "No valid paths found"
         else
             if [[ " ${paths[@]} " =~ " ${path} " ]]; then
-                printtext "Go into $_FONTBOLD_${path::-1}$_FONTDEFAULT_"
+                printtext "Go into $_FONTBOLD_${path}$_FONTDEFAULT_"
                 cd $GITROOT$path
             else
-                printtext "Path $_FONTBOLD_${path::-1}$_FONTDEFAULT_ not found"
+                printtext "Path $_FONTBOLD_${path}$_FONTDEFAULT_ not found"
                 printlinebreak
                 printtext "Available paths:"
                 printarray ${paths[@]}
@@ -50,16 +50,16 @@ private_gitlooppaths () {
     local pwd=$(pwd)
     cd $GITROOT
     
-    local paths=($(ls -d */))
+    local paths=($(ls -d */ | while read path ; do echo ${path//[\/]} ; done;))
     local excludePaths=("prueba")
 
     for path in ${paths[@]} ;
     do
-        if ! [[ " ${excludePaths[@]} " =~ " ${path::-1} " ]]; then
+        if ! [[ " ${excludePaths[@]} " =~ " ${path} " ]]; then
             local fullPath="$GITROOT$path"
             if [ -d "${fullPath}" ] ; then
                 cd $fullPath
-                eval "$1 ${path::-1} $secondArgument"
+                eval "$1 ${path} $secondArgument"
             fi
         fi
     done
