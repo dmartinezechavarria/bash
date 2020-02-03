@@ -50,7 +50,7 @@ private_gitlooppaths () {
     local pwd=$(pwd)
     cd $GITROOT
     
-    local paths=($(ls -d *))
+    local paths=($(ls -d */))
     local excludePaths=("prueba")
 
     for path in ${paths[@]} ;
