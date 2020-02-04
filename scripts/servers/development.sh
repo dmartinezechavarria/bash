@@ -42,7 +42,7 @@ devcleancache () {
         
     # Sincronizamos
     printlinebreak
-    printtext "Connecting to $_FONTBOLD_$SYNCSERVERHOST$_FONTDEFAULT_ with user $_FONTBOLD_$SYNCSERVERUSER$_FONTDEFAULT_ and execute script"
+    printtext "Connecting to $_FONTBOLD_$DEVSERVERHOST$_FONTDEFAULT_ with user $_FONTBOLD_$DEVSERVERUSER$_FONTDEFAULT_ and execute script"
     printlinebreak
     printtext "Connecting to server..."
     printlinebreak
@@ -51,4 +51,31 @@ devcleancache () {
 
     printlinebreak
     printsuccess "Cache cleaned successfully"
+}
+
+## 
+# @description Muestra el log de PHP FPM del servidor de desarrollo
+#
+# @example
+#   devlogphp
+#
+# @noargs
+#
+devlogphp () {
+
+    printtitle "Show PHP log"
+        
+    # Sincronizamos
+    printlinebreak
+    printtext "Connecting to $_FONTBOLD_$DEVSERVERHOST$_FONTDEFAULT_ with user $_FONTBOLD_$DEVSERVERUSER$_FONTDEFAULT_ and execute script"
+    printlinebreak
+    printtext "Connecting to server..."
+    printlinebreak
+    printtext "Showing PHP log (Ctrl+c to exit)..."
+    printlinebreak
+
+    ssh -i $RSAPRIVATEKEY  $DEVSERVERUSER@$DEVSERVERHOST -t  "echo '' && tail -f /var/opt/remi/php72/log/php-fpm/www-error.log" < /dev/tty
+
+    printlinebreak
+    printsuccess "Bye"
 }

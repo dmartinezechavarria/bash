@@ -37,11 +37,13 @@
     - [debugarray()](#debugarray())
     - [joinby()](#joinby())
     - [printtitle()](#printtitle())
+    - [killsshagent()](#killsshagent())
   - [Rocketchat (rocketchat.sh)](#rocketchat-(rocketchat.sh))
     - [rocketchatsendmessage()](#rocketchatsendmessage())
   - [Servers/Development (servers/development.sh)](#servers/development-(servers/development.sh))
     - [devremakeconfig()](#devremakeconfig())
     - [devcleancache()](#devcleancache())
+    - [devlogphp()](#devlogphp())
   - [Servers/Sync (servers/sync.sh)](#servers/sync-(servers/sync.sh))
     - [syncservers()](#syncservers())
   - [Styles (styles.sh)](#styles-(styles.sh))
@@ -63,8 +65,13 @@ Este repositorio contiene una colección de utilidades para Bash.
 #!/bin/bash
 
 #Pedir contraseña para la clave RSA al iniciar shell
-eval `ssh-agent -s`
-ssh-add /z/.ssh/id_rsa
+if [ -z ${SSH_AGENT_PID} ]
+then
+    eval `ssh-agent -s`
+    ssh-add /z/.ssh/id_rsa
+else
+    echo "SSH Agent already running in PID ${SSH_AGENT_PID}"
+fi
 
 #Incluimos las funciones de bash
 SCRIPTPATH="$( cd "$( dirname "$BASH_SOURCE" )" >/dev/null 2>&1 && pwd )"  #La variable SCRIPTPATH debería ser la ruta hasta donde hayas clonado/copiado el repositorio
@@ -395,6 +402,7 @@ Contiene funciones generales para bash que utilizan el resto de scripts
 * [debugarray()](#debugarray)
 * [joinby()](#joinby)
 * [printtitle()](#printtitle)
+* [killsshagent()](#killsshagent)
 
 
 ## printseparator()
@@ -535,6 +543,18 @@ printtitle "Texto del titulo"
 
 * **$1** (string): Texto del titulo.
 
+## killsshagent()
+
+Mata los procesos de SSH agent que haya corriendo
+
+### Example
+
+```bash
+killsshagent
+```
+
+_Function has no arguments._
+
 # Rocketchat (rocketchat.sh)
 
 Contiene funciones para realizar acciones sobre la plataforma Rocket.Chat
@@ -563,6 +583,7 @@ Contiene funciones para interactuar con el servidor de desarrollo
 
 * [devremakeconfig()](#devremakeconfig)
 * [devcleancache()](#devcleancache)
+* [devlogphp()](#devlogphp)
 
 
 ## devremakeconfig()
@@ -585,6 +606,18 @@ Elimina la cache de smarty
 
 ```bash
 devcleancache
+```
+
+_Function has no arguments._
+
+## devlogphp()
+
+Muestra el log de PHP FPM del servidor de desarrollo
+
+### Example
+
+```bash
+devlogphp
 ```
 
 _Function has no arguments._

@@ -135,3 +135,15 @@ printtitle () {
     printtext "$_FONTBOLD_ $1$_FONTDEFAULT_"
     printseparator
 }
+
+## 
+# @description Mata los procesos de SSH agent que haya corriendo
+#
+# @example
+#   killsshagent
+#
+# @noargs
+#
+killsshagent () {
+    kill -9 $(ps aux | grep '/usr/bin/ssh-agent' | awk '{print $1}')
+}

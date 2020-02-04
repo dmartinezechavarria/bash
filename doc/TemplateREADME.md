@@ -13,8 +13,13 @@ Este repositorio contiene una colección de utilidades para Bash.
 #!/bin/bash
 
 #Pedir contraseña para la clave RSA al iniciar shell
-eval `ssh-agent -s`
-ssh-add /z/.ssh/id_rsa
+if [ -z ${SSH_AGENT_PID} ]
+then
+    eval `ssh-agent -s`
+    ssh-add /z/.ssh/id_rsa
+else
+    echo "SSH Agent already running in PID ${SSH_AGENT_PID}"
+fi
 
 #Incluimos las funciones de bash
 SCRIPTPATH="$( cd "$( dirname "$BASH_SOURCE" )" >/dev/null 2>&1 && pwd )"  #La variable SCRIPTPATH debería ser la ruta hasta donde hayas clonado/copiado el repositorio
