@@ -85,7 +85,12 @@ printwarning () {
 #
 printarray () {
     array=("$@")
-    printf '%s\n' "${array[@]}"
+
+    printlinebreak
+    for element in ${array[@]}
+    do
+    printf "• $element\n"
+    done
     printlinebreak
 }
 

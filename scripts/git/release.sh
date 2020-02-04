@@ -55,7 +55,7 @@ gitreleasestart () {
                 # Creamos la nueva rama
                 git checkout $fromBranch
                 git pull
-                #git checkout -b $newBranch
+                git checkout -b $newBranch
 
                 printlinebreak
                 printsuccess "Branch $newBranch created successfully"

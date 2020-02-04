@@ -102,12 +102,63 @@ private_gitcheckout () {
 gitcheckoutall () {
     if [ -z "$1" ]
     then
-        printerror "No branch supplied"
+        printerror "No local branch supplied"
         return 1
     else
         branch=$1
 
         private_gitlooppaths "private_gitcheckout" $branch 
+
+        printtext "Your environment is on branch $_COLORGREEN_$branch$_COLORDEFAULT_"
+    fi
+}
+
+## Recibe una rama remota como parametro y hace checkout en todos los repositorios GIT a esa rama remota
+private_gitcheckoutremote () {
+    local branch=$2
+    local remotebranch="origin/$branch"
+    local branches=($(git branch -a | grep "[^* ]+" -Eo))
+    local currentBranch=$(gitbranch)
+
+    local resume="$(private_gitresume $1)"
+    printtitle "$resume => $_COLORYELLOW_$branch$_COLORDEFAULT_"
+
+    if [[ " ${branches[@]} " =~ " remotes/${remotebranch} " ]]; then
+        git checkout --track $remotebranch
+        if [ $? -eq 0 ]; then
+            printtext "Path $_FONTBOLD_$1$_FONTDEFAULT_ on branch $_COLORGREEN_$branch$_COLORDEFAULT_ now"
+        else
+            git checkout $branch
+            printtext "Branch $_COLORGREEN_$branch$_COLORDEFAULT_ already exists checkout $_FONTBOLD_$1$_FONTDEFAULT_ to it"
+        fi  
+    else
+        printtext "Branch $_COLORGREEN_$branch$_COLORDEFAULT_ not found in $_FONTBOLD_$1$_FONTDEFAULT_"
+        printlinebreak
+        printtext "Available branchs for $_FONTBOLD_$1$_FONTDEFAULT_:"
+        printarray ${branches[@]}
+    fi
+
+    printseparator
+    printlinebreak
+}
+
+## 
+# @description Realiza un checkout a una rama remota sobre todos los repositorio
+#
+# @example
+#   gitcheckoutremoteall feature/PES
+#
+# @arg $1 string Nombre de la rama remota.
+#
+gitcheckoutremoteall () {
+    if [ -z "$1" ]
+    then
+        printerror "No remote branch supplied"
+        return 1
+    else
+        branch=$1
+
+        private_gitlooppaths "private_gitcheckoutremote" $branch 
 
         printtext "Your environment is on branch $_COLORGREEN_$branch$_COLORDEFAULT_"
     fi
