@@ -97,7 +97,7 @@ private_gitcheckout () {
 # @example
 #   gitcheckoutall feature/PES
 #
-# @arg $1 string Nombre de la rama.
+# @arg $1 string Nombre de la rama local.
 #
 gitcheckoutall () {
     if [ -z "$1" ]
@@ -143,7 +143,7 @@ private_gitcheckoutremote () {
 }
 
 ## 
-# @description Realiza un checkout a una rama remota sobre todos los repositorio
+# @description Realiza un checkout a una rama remota sobre todos los repositorios
 #
 # @example
 #   gitcheckoutremoteall feature/PES

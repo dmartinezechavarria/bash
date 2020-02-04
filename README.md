@@ -11,6 +11,7 @@
   - [Git/Helpers (git/helpers.sh)](#git/helpers-(git/helpers.sh))
     - [cdgit()](#cdgit())
     - [gitcheckoutall()](#gitcheckoutall())
+    - [gitcheckoutremoteall()](#gitcheckoutremoteall())
     - [gitversion()](#gitversion())
     - [gitbranch()](#gitbranch())
     - [gitbranchall()](#gitbranchall())
@@ -163,6 +164,7 @@ Contiene funciones generales de GIT
 
 * [cdgit()](#cdgit)
 * [gitcheckoutall()](#gitcheckoutall)
+* [gitcheckoutremoteall()](#gitcheckoutremoteall)
 * [gitversion()](#gitversion)
 * [gitbranch()](#gitbranch)
 * [gitbranchall()](#gitbranchall)
@@ -196,7 +198,21 @@ gitcheckoutall feature/PES
 
 ### Arguments
 
-* **$1** (string): Nombre de la rama.
+* **$1** (string): Nombre de la rama local.
+
+## gitcheckoutremoteall()
+
+Realiza un checkout a una rama remota sobre todos los repositorios
+
+### Example
+
+```bash
+gitcheckoutremoteall feature/PES
+```
+
+### Arguments
+
+* **$1** (string): Nombre de la rama remota.
 
 ## gitversion()
 
