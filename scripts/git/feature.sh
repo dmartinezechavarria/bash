@@ -43,9 +43,9 @@ gitfeaturestart () {
                     git checkout -b $newBranch
 
                     printlinebreak
-                    printsuccess "Branch$_FONTBOLD_ $newBranch$_FONTDEFAULT_ created successfully"
+                    printsuccess "Branch $newBranch created successfully"
                     printlinebreak
-                    printsuccess "Feature$_FONTBOLD_ $1$_FONTDEFAULT_ started successfully"
+                    printsuccess "Feature $1 started successfully"
                     printlinebreak
                     printtext "Use$_FONTBOLD_ gitfeaturefinish $1 $2$_FONTDEFAULT_ to finalize the feature"
                     printtext "Use$_FONTBOLD_ gitfeatureupdate $1 $2$_FONTDEFAULT_ to update feature from origin branch"

@@ -322,3 +322,22 @@ gitfetchall () {
 
     printsuccess "Your environment is up to date"
 }
+
+## 
+# @description Muestra un resumen de las ramas con la fecha y autor de su ultimo commit
+#
+# @example
+#   gitbranchages
+#
+# @noargs
+#
+gitbranchages () {
+    printtitle "Last commit date\t\tAuthor\t\t\tBranch"
+
+    printtext "Local branches"
+    git for-each-ref --sort='-committerdate:iso8601' --format='   %(committerdate:iso8601)%09%(committeremail)%09%(refname:short)' refs/heads
+    
+    printlinebreak
+    printtext "Remote branches"
+    git for-each-ref --sort='-committerdate:iso8601' --format='   %(committerdate:iso8601)%09%(committeremail)%09%(refname:short)' refs/remotes
+}

@@ -19,6 +19,7 @@
     - [gitstatusall()](#gitstatusall())
     - [gitlogall()](#gitlogall())
     - [gitfetchall()](#gitfetchall())
+    - [gitbranchages()](#gitbranchages())
   - [Git/Hotfix (git/hotfix.sh)](#git/hotfix-(git/hotfix.sh))
     - [githotfixstart()](#githotfixstart())
     - [githotfixmerge()](#githotfixmerge())
@@ -172,6 +173,7 @@ Contiene funciones generales de GIT
 * [gitstatusall()](#gitstatusall)
 * [gitlogall()](#gitlogall)
 * [gitfetchall()](#gitfetchall)
+* [gitbranchages()](#gitbranchages)
 
 
 ## cdgit()
@@ -298,6 +300,18 @@ Realiza un fetch en todos los repositorios
 
 ```bash
 gitfetchall
+```
+
+_Function has no arguments._
+
+## gitbranchages()
+
+Muestra un resumen de las ramas con la fecha y autor de su ultimo commit
+
+### Example
+
+```bash
+gitbranchages
 ```
 
 _Function has no arguments._
