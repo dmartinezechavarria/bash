@@ -3,6 +3,7 @@
   - [Contenido](#contenido)
   - [Como instalar](#como-instalar)
   - [Alias (alias.sh)](#alias-(alias.sh))
+  - [Git/Alias (git/alias.sh)](#git/alias-(git/alias.sh))
   - [Git/Feature (git/feature.sh)](#git/feature-(git/feature.sh))
     - [gitfeaturestart()](#gitfeaturestart())
     - [gitfeaturefinish()](#gitfeaturefinish())
@@ -10,15 +11,15 @@
     - [gitfeatureremote()](#gitfeatureremote())
   - [Git/Helpers (git/helpers.sh)](#git/helpers-(git/helpers.sh))
     - [cdgit()](#cdgit())
-    - [gitcheckoutall()](#gitcheckoutall())
-    - [gitcheckoutremoteall()](#gitcheckoutremoteall())
+    - [gitcheckout()](#gitcheckout())
+    - [gitcheckoutremote()](#gitcheckoutremote())
     - [gitversion()](#gitversion())
     - [gitbranch()](#gitbranch())
     - [gitbranchall()](#gitbranchall())
-    - [gitpullall()](#gitpullall())
-    - [gitstatusall()](#gitstatusall())
-    - [gitlogall()](#gitlogall())
-    - [gitfetchall()](#gitfetchall())
+    - [gitpull()](#gitpull())
+    - [gitstatus()](#gitstatus())
+    - [gitlog()](#gitlog())
+    - [gitfetch()](#gitfetch())
     - [gitbranchages()](#gitbranchages())
   - [Git/Hotfix (git/hotfix.sh)](#git/hotfix-(git/hotfix.sh))
     - [githotfixstart()](#githotfixstart())
@@ -28,6 +29,7 @@
     - [gitreleasestart()](#gitreleasestart())
     - [gitreleasemerge()](#gitreleasemerge())
     - [gitreleasefinish()](#gitreleasefinish())
+    - [gitreleasedeployed()](#gitreleasedeployed())
   - [Helpers (helpers.sh)](#helpers-(helpers.sh))
     - [printseparator()](#printseparator())
     - [printlinebreak()](#printlinebreak())
@@ -40,6 +42,7 @@
     - [joinby()](#joinby())
     - [printtitle()](#printtitle())
     - [killsshagent()](#killsshagent())
+    - [promptformultiselect()](#promptformultiselect())
   - [Rocketchat (rocketchat.sh)](#rocketchat-(rocketchat.sh))
     - [rocketchatsendmessage()](#rocketchatsendmessage())
   - [Servers/Development (servers/development.sh)](#servers/development-(servers/development.sh))
@@ -86,6 +89,12 @@ source $SCRIPTPATH/bash/include.sh
 # Alias (alias.sh)
 
 Contiene alias utiles para el resto de scripts y el uso normal de bash
+
+
+
+# Git/Alias (git/alias.sh)
+
+Contiene alias para Git
 
 
 
@@ -164,15 +173,15 @@ gitfeatureremote GPHADPR-2104
 Contiene funciones generales de GIT
 
 * [cdgit()](#cdgit)
-* [gitcheckoutall()](#gitcheckoutall)
-* [gitcheckoutremoteall()](#gitcheckoutremoteall)
+* [gitcheckout()](#gitcheckout)
+* [gitcheckoutremote()](#gitcheckoutremote)
 * [gitversion()](#gitversion)
 * [gitbranch()](#gitbranch)
 * [gitbranchall()](#gitbranchall)
-* [gitpullall()](#gitpullall)
-* [gitstatusall()](#gitstatusall)
-* [gitlogall()](#gitlogall)
-* [gitfetchall()](#gitfetchall)
+* [gitpull()](#gitpull)
+* [gitstatus()](#gitstatus)
+* [gitlog()](#gitlog)
+* [gitfetch()](#gitfetch)
 * [gitbranchages()](#gitbranchages)
 
 
@@ -188,33 +197,35 @@ cdgit
 
 _Function has no arguments._
 
-## gitcheckoutall()
+## gitcheckout()
 
-Realiza un checkout a una rama local sobre todos los repositorio
+Realiza un checkout a una rama local sobre los repositorios seleccionados
 
 ### Example
 
 ```bash
-gitcheckoutall feature/PES
+gitcheckout feature/PES all
 ```
 
 ### Arguments
 
 * **$1** (string): Nombre de la rama local.
+* **$2** (string): Opcional, si se pasa el valor all se aplica a todos los repositorios, si no se permite elegir.
 
-## gitcheckoutremoteall()
+## gitcheckoutremote()
 
-Realiza un checkout a una rama remota sobre todos los repositorios
+Realiza un checkout a una rama remota sobre los repositorios seleccionados
 
 ### Example
 
 ```bash
-gitcheckoutremoteall feature/PES
+gitcheckoutremote feature/PES all
 ```
 
 ### Arguments
 
-* **$1** (string): Nombre de la rama remota.
+* **$1** (string): Nombre de la rama local.
+* **$2** (string): Opcional, si se pasa el valor all se aplica a todos los repositorios, si no se permite elegir.
 
 ## gitversion()
 
@@ -254,55 +265,62 @@ gitbranchall
 
 _Function has no arguments._
 
-## gitpullall()
+## gitpull()
 
-Realiza un pull en todos los repositorios
+Realiza un pull sobre los repositorios seleccionados
 
 ### Example
 
 ```bash
-gitpullall
+gitpull all
 ```
 
-_Function has no arguments._
+### Arguments
 
-## gitstatusall()
+* **$1** (string): Opcional, si se pasa el valor all se aplica a todos los repositorios, si no se permite elegir.
 
-Muestra el estado de todos los repositorios
+## gitstatus()
+
+Muestra el estado de los repositorios seleccionados
 
 ### Example
 
 ```bash
-gitstatusall
+gitstatus all
 ```
 
-_Function has no arguments._
+### Arguments
 
-## gitlogall()
+* **$1** (string): Opcional, si se pasa el valor all se aplica a todos los repositorios, si no se permite elegir.
 
-Muestra el log de todos los repositorios
+## gitlog()
+
+Muestra el log de los repositorios seleccionados
 
 ### Example
 
 ```bash
-gitlogall 15
+gitlog all 15
 ```
 
 ### Arguments
 
 * **$1** (int): Numero de lineas del log a mostrar.
+* **$2** (string): Opcional, si se pasa el valor all se aplica a todos los repositorios, si no se permite elegir.
 
-## gitfetchall()
+## gitfetch()
 
-Realiza un fetch en todos los repositorios
+Realiza un fetch en los repositorios seleccionados
 
 ### Example
 
 ```bash
-gitfetchall
+gitfetch all
 ```
 
-_Function has no arguments._
+### Arguments
+
+* **$1** (string): Opcional, si se pasa el valor all se aplica a todos los repositorios, si no se permite elegir.
 
 ## gitbranchages()
 
@@ -374,6 +392,7 @@ Contiene funciones para realizar la parte GIT de las releases
 * [gitreleasestart()](#gitreleasestart)
 * [gitreleasemerge()](#gitreleasemerge)
 * [gitreleasefinish()](#gitreleasefinish)
+* [gitreleasedeployed()](#gitreleasedeployed)
 
 
 ## gitreleasestart()
@@ -418,6 +437,20 @@ gitreleasefinish
 
 * **$1** (string): Rama sobre la que finalizar la release, si no se pasa usa master.
 
+## gitreleasedeployed()
+
+Realiza acciones tras el despliegue de una release (por ejemplo avisar en Rocket.Chat)
+
+### Example
+
+```bash
+gitreleasedeployed
+```
+
+### Arguments
+
+* **$1** (string): Rama sobre la que se ha desplegado la release, si no se pasa usa master.
+
 # Helpers (helpers.sh)
 
 Contiene funciones generales para bash que utilizan el resto de scripts
@@ -433,6 +466,7 @@ Contiene funciones generales para bash que utilizan el resto de scripts
 * [joinby()](#joinby)
 * [printtitle()](#printtitle)
 * [killsshagent()](#killsshagent)
+* [promptformultiselect()](#promptformultiselect)
 
 
 ## printseparator()
@@ -584,6 +618,22 @@ killsshagent
 ```
 
 _Function has no arguments._
+
+## promptformultiselect()
+
+Muestra un picker multiselect
+
+### Example
+
+```bash
+promptformultiselect results "$(echo ${array[@]})" "panel procws" 
+```
+
+### Arguments
+
+* **$1** (array): Variable a la que se devolverá el resultado.
+* **$2** (string): String de opciones separadas por espacio.
+* **$3** (string): Opcional, String de las opciones seleccionadas por defecto separadas por espacio.
 
 # Rocketchat (rocketchat.sh)
 

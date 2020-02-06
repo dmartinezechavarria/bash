@@ -19,7 +19,7 @@ cdgit () {
     else
         cd $GITROOT
         local path="${1//[\/]}"
-        local paths=($(ls -d */ | while read path ; do echo ${path//[\/]} ; done;))
+        local paths=( $(private_gitpaths) )
         
         if (( ${#paths[@]} == 0 )); then
             printerror "No valid paths found"
@@ -39,29 +39,40 @@ cdgit () {
     fi
 }
 
+# Devuelve los repositorios Git disponibles
+private_gitpaths () {
+    local pwd=$(pwd)
+    local excludePaths=("prueba")
+    cd $GITROOT
+    echo $(ls -d */ | while read path ; do if ! [[ " ${excludePaths[@]} " =~ " ${path//[\/]} " ]]; then  echo ${path//[\/]} ; fi done;)
+    cd $pwd
+}
+
 ## Recorre los paths con repositorios GIT y ejecuta el primer parametro pasandole como primer parametro el path 
 ## y como segundo parametro opcional el segundo parametro recibido
 private_gitlooppaths () {
     local secondArgument=""
-    if [ $# -eq 2 ]
+    if [ $# -ge 2 ]
     then
-    secondArgument=$2
+        secondArgument=$2
     fi
 
     local pwd=$(pwd)
     cd $GITROOT
-    
-    local paths=($(ls -d */ | while read path ; do echo ${path//[\/]} ; done;))
-    local excludePaths=("prueba")
+
+    local paths=()
+    if [[ -z $3 ]]; then
+        paths=( $(private_gitpaths) )
+    else
+        paths=( $(echo "$3") )
+    fi
 
     for path in ${paths[@]} ;
     do
-        if ! [[ " ${excludePaths[@]} " =~ " ${path} " ]]; then
-            local fullPath="$GITROOT$path"
-            if [ -d "${fullPath}" ] ; then
-                cd $fullPath
-                eval "$1 ${path} $secondArgument"
-            fi
+        local fullPath="$GITROOT$path"
+        if [ -d "${fullPath}" ] ; then
+            cd $fullPath
+            eval "$1 ${path} $secondArgument"
         fi
     done
 
@@ -92,24 +103,43 @@ private_gitcheckout () {
 }
 
 ## 
-# @description Realiza un checkout a una rama local sobre todos los repositorio
+# @description Realiza un checkout a una rama local sobre los repositorios seleccionados
 #
 # @example
-#   gitcheckoutall feature/PES
+#   gitcheckout feature/PES all
 #
 # @arg $1 string Nombre de la rama local.
+# @arg $2 string Opcional, si se pasa el valor all se aplica a todos los repositorios, si no se permite elegir.
 #
-gitcheckoutall () {
-    if [ -z "$1" ]
+gitcheckout () {
+    if [ -z "$1" ] 
     then
         printerror "No local branch supplied"
         return 1
     else
-        branch=$1
+        local branch=$1
 
-        private_gitlooppaths "private_gitcheckout" $branch 
+        printtitle "Git checkout to local branch $_COLORGREEN_$branch$_COLORDEFAULT_"
 
-        printtext "Your environment is on branch $_COLORGREEN_$branch$_COLORDEFAULT_"
+        local selectedRepositories=()
+        if [ -z "$2" ] 
+        then
+            private_gitpickpaths selectedRepositories
+        else
+            if [ $2 = "all" ]; 
+            then
+                selectedRepositories=( $(private_gitpaths) )
+            fi
+        fi
+
+        printlinebreak
+
+        if [ ${#selectedRepositories[@]} -eq 0 ]; then
+            printerror "No repositories picked"
+        else
+            private_gitlooppaths "private_gitcheckout" $branch "$(echo ${selectedRepositories[@]})"
+            printtext "Repositories on branch $_COLORGREEN_$branch$_COLORDEFAULT_"
+        fi
     fi
 }
 
@@ -143,24 +173,43 @@ private_gitcheckoutremote () {
 }
 
 ## 
-# @description Realiza un checkout a una rama remota sobre todos los repositorios
+# @description Realiza un checkout a una rama remota sobre los repositorios seleccionados
 #
 # @example
-#   gitcheckoutremoteall feature/PES
+#   gitcheckoutremote feature/PES all
 #
-# @arg $1 string Nombre de la rama remota.
+# @arg $1 string Nombre de la rama local.
+# @arg $2 string Opcional, si se pasa el valor all se aplica a todos los repositorios, si no se permite elegir.
 #
-gitcheckoutremoteall () {
-    if [ -z "$1" ]
+gitcheckoutremote () {
+    if [ -z "$1" ] 
     then
         printerror "No remote branch supplied"
         return 1
     else
-        branch=$1
+        local branch=$1
 
-        private_gitlooppaths "private_gitcheckoutremote" $branch 
+        printtitle "Git checkout to remote branch $_COLORGREEN_$branch$_COLORDEFAULT_"
 
-        printtext "Your environment is on branch $_COLORGREEN_$branch$_COLORDEFAULT_"
+        local selectedRepositories=()
+        if [ -z "$2" ] 
+        then
+            private_gitpickpaths selectedRepositories
+        else
+            if [ $2 = "all" ]; 
+            then
+                selectedRepositories=( $(private_gitpaths) )
+            fi
+        fi
+
+        printlinebreak
+
+        if [ ${#selectedRepositories[@]} -eq 0 ]; then
+            printerror "No repositories picked"
+        else
+            private_gitlooppaths "private_gitcheckoutremote" $branch "$(echo ${selectedRepositories[@]})"
+            printtext "Repositories on branch $_COLORGREEN_$branch$_COLORDEFAULT_"
+        fi
     fi
 }
 
@@ -193,6 +242,7 @@ gitbranch () {
     echo $branch
 }
 
+# Muestra el branch y la version del repositorio
 private_gitresume () {
     local branch=$(gitbranch)
     local version=$(gitversion)
@@ -200,6 +250,7 @@ private_gitresume () {
     echo "$_FONTBOLD_$1 ($version)$_FONTDEFAULT_ on branch $_COLORGREEN_$branch$_COLORDEFAULT_"
 }
 
+# Muestra el branch y la version del repositorio
 private_gitbranch () {
     local resume=$(private_gitresume $1)
     printtext "Path $resume"
@@ -228,20 +279,38 @@ private_gitpull () {
     printlinebreak
 }
 
+
 ## 
-# @description Realiza un pull en todos los repositorios
+# @description Realiza un pull sobre los repositorios seleccionados
 #
 # @example
-#   gitpullall
+#   gitpull all
 #
-# @noargs
+# @arg $1 string Opcional, si se pasa el valor all se aplica a todos los repositorios, si no se permite elegir.
 #
-gitpullall () {
-    private_gitlooppaths "private_gitpull"
+gitpull () {
+    printtitle "Git pull"
 
-    printsuccess "Your environment is updated"
+    local selectedRepositories=()
+    if [ -z "$1" ] 
+    then
+        private_gitpickpaths selectedRepositories
+    else
+        if [ $1 = "all" ]; 
+        then
+            selectedRepositories=( $(private_gitpaths) )
+        fi
+    fi
+
+    printlinebreak
+
+    if [ ${#selectedRepositories[@]} -eq 0 ]; then
+        printerror "No repositories picked"
+    else
+        private_gitlooppaths "private_gitpull" "" "$(echo ${selectedRepositories[@]})"
+        printtext "Repositories up to date"
+    fi
 }
-
 
 ## Devuelve el status en todos los repositorios GIT
 private_gitstatus () {
@@ -255,15 +324,34 @@ private_gitstatus () {
 }
 
 ## 
-# @description Muestra el estado de todos los repositorios
+# @description Muestra el estado de los repositorios seleccionados
 #
 # @example
-#   gitstatusall
+#   gitstatus all
 #
-# @noargs
+# @arg $1 string Opcional, si se pasa el valor all se aplica a todos los repositorios, si no se permite elegir.
 #
-gitstatusall () {
-    private_gitlooppaths "private_gitstatus"
+gitstatus () {
+    printtitle "Git status"
+
+    local selectedRepositories=()
+    if [ -z "$1" ] 
+    then
+        private_gitpickpaths selectedRepositories
+    else
+        if [ $1 = "all" ]; 
+        then
+            selectedRepositories=( $(private_gitpaths) )
+        fi
+    fi
+
+    printlinebreak
+
+    if [ ${#selectedRepositories[@]} -eq 0 ]; then
+        printerror "No repositories picked"
+    else
+        private_gitlooppaths "private_gitstatus" "" "$(echo ${selectedRepositories[@]})"
+    fi
 }
 
 ## Devuelve el log de todos los repositorios GIT
@@ -278,14 +366,15 @@ private_gitlog () {
 }
 
 ## 
-# @description Muestra el log de todos los repositorios
+# @description Muestra el log de los repositorios seleccionados
 #
 # @example
-#   gitlogall 15
+#   gitlog all 15
 #
 # @arg $1 int Numero de lineas del log a mostrar.
+# @arg $2 string Opcional, si se pasa el valor all se aplica a todos los repositorios, si no se permite elegir.
 #
-gitlogall () {
+gitlog () {
     local lines=10
     if [ -z "$1" ]
     then
@@ -294,7 +383,26 @@ gitlogall () {
         lines=$1
     fi
 
-    private_gitlooppaths "private_gitlog" $lines 
+    printtitle "Git log ($lines lines)"
+
+    local selectedRepositories=()
+    if [ -z "$2" ] 
+    then
+        private_gitpickpaths selectedRepositories
+    else
+        if [ $2 = "all" ]; 
+        then
+            selectedRepositories=( $(private_gitpaths) )
+        fi
+    fi
+
+    printlinebreak
+
+    if [ ${#selectedRepositories[@]} -eq 0 ]; then
+        printerror "No repositories picked"
+    else
+        private_gitlooppaths "private_gitlog" $lines "$(echo ${selectedRepositories[@]})"
+    fi
 }
 
 ## Hace un fetch en todos los repositorios GIT
@@ -310,17 +418,35 @@ private_gitfetch () {
 }
 
 ## 
-# @description Realiza un fetch en todos los repositorios
+# @description Realiza un fetch en los repositorios seleccionados
 #
 # @example
-#   gitfetchall
+#   gitfetch all
 #
-# @noargs
+# @arg $1 string Opcional, si se pasa el valor all se aplica a todos los repositorios, si no se permite elegir.
 #
-gitfetchall () {
-    private_gitlooppaths "private_gitfetch"
+gitfetch () {
+    printtitle "Git fetch"
 
-    printsuccess "Your environment is up to date"
+    local selectedRepositories=()
+    if [ -z "$1" ] 
+    then
+        private_gitpickpaths selectedRepositories
+    else
+        if [ $1 = "all" ]; 
+        then
+            selectedRepositories=( $(private_gitpaths) )
+        fi
+    fi
+
+    printlinebreak
+
+    if [ ${#selectedRepositories[@]} -eq 0 ]; then
+        printerror "No repositories picked"
+    else
+        private_gitlooppaths "private_gitfetch" "" "$(echo ${selectedRepositories[@]})"
+        printsuccess "Repositories are up to date"
+    fi
 }
 
 ## 
@@ -340,4 +466,17 @@ gitbranchages () {
     printlinebreak
     printtext "Remote branches"
     git for-each-ref --sort='-committerdate:iso8601' --format='   %(committerdate:iso8601)%09%(committeremail)%09%(refname:short)' refs/remotes
+}
+
+# Muestra un select para elegir paths de GIT
+private_gitpickpaths () {
+    local retval=$1
+    local paths=( $(private_gitpaths) )
+
+    printtext "Pick repositories with spacebar and confirm with enter"
+    printlinebreak
+
+    promptformultiselect results "$(echo ${paths[@]})" #"api_proc panel" 
+
+    eval $retval='("${results[@]}")'
 }
