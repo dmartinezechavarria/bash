@@ -193,6 +193,7 @@ githotfixfinish () {
                 
                 # Creamos la nueva tag y borramos la rama
                 git checkout $fromBranch
+                git pull
                 git tag $version
                 printlinebreak
                 printsuccess "Tag $version created from branch $fromBranch successfully"
@@ -211,6 +212,49 @@ githotfixfinish () {
             printerror "Merge branch '$fromBranch' no exists"
             return 1
         fi
+    else
+        printerror "Not a git repository (or any of the parent directories)"
+        return 1
+    fi
+}
+
+##
+# @description Realiza acciones tras el despliegue de un hotfix (por ejemplo avisar en Rocket.Chat)
+#
+# @example
+#   githotfixdeployed
+#
+# @noargs
+#
+githotfixdeployed () {
+    inside_git_repo="$(git rev-parse --is-inside-work-tree 2>/dev/null)"
+
+    # Comprobamos que estamos en un repo GIT
+    if [ "$inside_git_repo" ]; then
+        # Vamos a la raiz del repo
+        local pwd=$(pwd)
+        local gitroot=$(git rev-parse --show-toplevel)
+        cd $gitroot
+
+        # Obtenemos la versión a partir del changelog
+        local version=$(gitversion) 
+        
+        printtitle "Deployed hotfix $_FONTBOLD_$version$_FONTDEFAULT_"
+
+        # Enviamos el mensaje al Rocketchat
+        local channel=$ROCKETCHATCHANNELAP2
+        local path=$(basename "`pwd`")
+        if [[ " ${COMMONPROJECTS[@]} " =~ " ${path} " ]]; then
+            channel=$ROCKETCHATCHANNELCOMMON
+        fi
+        printtext "Sending message to Rocketchat channel $_FONTBOLD_$channel$_FONTDEFAULT_"
+        rocketchatsendmessage $channel "Desplegado hotfix *$version* de *$path*"
+        printsuccess "Message sent successfully"
+        
+        printlinebreak
+        printtext "Post deployed $_FONTBOLD_$version$_FONTDEFAULT_ finished succesfully"
+        
+        cd $pwd
     else
         printerror "Not a git repository (or any of the parent directories)"
         return 1

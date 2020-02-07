@@ -17,6 +17,7 @@ source $SCRIPTPATH/scripts/helpers.sh
 
 # GIT
 source $SCRIPTPATH/scripts/git/helpers.sh
+source $SCRIPTPATH/scripts/git/alias.sh
 source $SCRIPTPATH/scripts/git/feature.sh
 source $SCRIPTPATH/scripts/git/hotfix.sh
 source $SCRIPTPATH/scripts/git/release.sh

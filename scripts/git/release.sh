@@ -195,6 +195,7 @@ gitreleasefinish () {
                 
                 # Creamos la nueva tag y borramos la rama
                 git checkout $fromBranch
+                git pull
                 git tag $version
                 printlinebreak
                 printsuccess "Tag $version created from branch $fromBranch successfully"
@@ -225,52 +226,37 @@ gitreleasefinish () {
 # @example
 #   gitreleasedeployed
 #
-# @arg $1 string Rama sobre la que se ha desplegado la release, si no se pasa usa master.
+# @noargs
 #
 gitreleasedeployed () {
     inside_git_repo="$(git rev-parse --is-inside-work-tree 2>/dev/null)"
 
     # Comprobamos que estamos en un repo GIT
     if [ "$inside_git_repo" ]; then
-        # Comprobamos si se pasa una rama para mezclar origen, si no se usa master
-        if [ -z "$1" ]
-        then
-            fromBranch="master"
-        else
-            fromBranch=$1
+        # Vamos a la raiz del repo
+        local pwd=$(pwd)
+        local gitroot=$(git rev-parse --show-toplevel)
+        cd $gitroot
+
+        # Obtenemos la versión a partir del changelog
+        local version=$(gitversion) 
+        
+        printtitle "Deployed release $_FONTBOLD_$version$_FONTDEFAULT_"
+
+        # Enviamos el mensaje al Rocketchat
+        local channel=$ROCKETCHATCHANNELAP2
+        local path=$(basename "`pwd`")
+        if [[ " ${COMMONPROJECTS[@]} " =~ " ${path} " ]]; then
+            channel=$ROCKETCHATCHANNELCOMMON
         fi
-
-        # Comprobamos que la rama para mezclar existe
-        local branches=($(git branch | grep "[^* ]+" -Eo))
-        if [[ " ${branches[@]} " =~ " ${fromBranch} " ]]; then
-            # Vamos a la raiz del repo
-            local pwd=$(pwd)
-            local gitroot=$(git rev-parse --show-toplevel)
-            cd $gitroot
-
-            # Calculamos el nombre de la rama a partir del changelog
-            local version=$(gitversion) 
-            
-            printtitle "Deployed release $_FONTBOLD_$version$_FONTDEFAULT_"
-
-            # Enviamos el mensaje al Rocketchat
-            local channel=$ROCKETCHATCHANNELAP2
-            local path=$(basename "`pwd`")
-            if [[ " ${COMMONPROJECTS[@]} " =~ " ${path} " ]]; then
-                channel=$ROCKETCHATCHANNELCOMMON
-            fi
-            printtext "Sending message to Rocketchat channel $_FONTBOLD_$channel$_FONTDEFAULT_"
-            rocketchatsendmessage $channel "Desplegada release *$version* de *$path*"
-            printsuccess "Message sent successfully"
-            
-            printlinebreak
-            printtext "Post deployed $_FONTBOLD_ $version $_FONTDEFAULT_ finished succesfully"
-            
-            cd $pwd
-        else
-            printerror "Release branch '$fromBranch' no exists"
-            return 1
-        fi
+        printtext "Sending message to Rocketchat channel $_FONTBOLD_$channel$_FONTDEFAULT_"
+        rocketchatsendmessage $channel "Desplegada release *$version* de *$path*"
+        printsuccess "Message sent successfully"
+        
+        printlinebreak
+        printtext "Post deployed $_FONTBOLD_$version$_FONTDEFAULT_ finished succesfully"
+        
+        cd $pwd
     else
         printerror "Not a git repository (or any of the parent directories)"
         return 1

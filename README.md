@@ -25,6 +25,7 @@
     - [githotfixstart()](#githotfixstart())
     - [githotfixmerge()](#githotfixmerge())
     - [githotfixfinish()](#githotfixfinish())
+    - [githotfixdeployed()](#githotfixdeployed())
   - [Git/Release (git/release.sh)](#git/release-(git/release.sh))
     - [gitreleasestart()](#gitreleasestart())
     - [gitreleasemerge()](#gitreleasemerge())
@@ -341,6 +342,7 @@ Contiene funciones para realizar la parte GIT de los hotfix
 * [githotfixstart()](#githotfixstart)
 * [githotfixmerge()](#githotfixmerge)
 * [githotfixfinish()](#githotfixfinish)
+* [githotfixdeployed()](#githotfixdeployed)
 
 
 ## githotfixstart()
@@ -384,6 +386,18 @@ githotfixfinish
 ### Arguments
 
 * **$1** (string): Rama sobre la que finalizar el hotfix, si no se pasa usa master.
+
+## githotfixdeployed()
+
+Realiza acciones tras el despliegue de un hotfix (por ejemplo avisar en Rocket.Chat)
+
+### Example
+
+```bash
+githotfixdeployed
+```
+
+_Function has no arguments._
 
 # Git/Release (git/release.sh)
 
@@ -447,9 +461,7 @@ Realiza acciones tras el despliegue de una release (por ejemplo avisar en Rocket
 gitreleasedeployed
 ```
 
-### Arguments
-
-* **$1** (string): Rama sobre la que se ha desplegado la release, si no se pasa usa master.
+_Function has no arguments._
 
 # Helpers (helpers.sh)
 
