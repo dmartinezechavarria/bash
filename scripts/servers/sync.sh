@@ -52,7 +52,7 @@ syncservers () {
             printtext "Syncing machines..."
             printlinebreak
 
-            ssh -i $RSAPRIVATEKEY $SYNCSERVERUSER@$SYNCSERVERHOST "sh ~/bin/syncservers-pdc.sh $env"
+            ssh -i $RSAPRIVATEKEY $SYNCSERVERUSER@$SYNCSERVERHOST "sh ~/bin/syncservers-$project.sh $env"
 
             printlinebreak
             printsuccess "Sync completed successfully"

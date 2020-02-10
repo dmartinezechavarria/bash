@@ -22,15 +22,15 @@
     - [gitfetch()](#gitfetch())
     - [gitbranchages()](#gitbranchages())
   - [Git/Hotfix (git/hotfix.sh)](#git/hotfix-(git/hotfix.sh))
+    - [githotfixstartalert()](#githotfixstartalert())
     - [githotfixstart()](#githotfixstart())
-    - [githotfixmerge()](#githotfixmerge())
     - [githotfixfinish()](#githotfixfinish())
-    - [githotfixdeployed()](#githotfixdeployed())
+    - [githotfixfinishalert()](#githotfixfinishalert())
   - [Git/Release (git/release.sh)](#git/release-(git/release.sh))
+    - [gitreleasestartalert()](#gitreleasestartalert())
     - [gitreleasestart()](#gitreleasestart())
-    - [gitreleasemerge()](#gitreleasemerge())
     - [gitreleasefinish()](#gitreleasefinish())
-    - [gitreleasedeployed()](#gitreleasedeployed())
+    - [gitreleasefinishalert()](#gitreleasefinishalert())
   - [Helpers (helpers.sh)](#helpers-(helpers.sh))
     - [printseparator()](#printseparator())
     - [printlinebreak()](#printlinebreak())
@@ -116,7 +116,18 @@ Crea una nueva feature a partir de una rama
 ### Example
 
 ```bash
+#Iniciar feature
 gitfeaturestart GPHADPR-2104 dev
+
+#Opcionalmente nos traemos los cambios de dev a la feature cuando queramos
+gitfeatureupdate GPHADPR-2104 dev 
+
+#Realizar cambios de la feature y actualizar Changelog
+git add .
+git commit -m "GPHADPR-2104 - ...."
+
+#Terminar feature 
+gitfeaturefinish GPHADPR-2104 dev
 ```
 
 ### Arguments
@@ -339,11 +350,23 @@ _Function has no arguments._
 
 Contiene funciones para realizar la parte GIT de los hotfix
 
+* [githotfixstartalert()](#githotfixstartalert)
 * [githotfixstart()](#githotfixstart)
-* [githotfixmerge()](#githotfixmerge)
 * [githotfixfinish()](#githotfixfinish)
-* [githotfixdeployed()](#githotfixdeployed)
+* [githotfixfinishalert()](#githotfixfinishalert)
 
+
+## githotfixstartalert()
+
+Envia un aviso de comienzo de hotfix a Rocket.Chat en los repositorios seleccionados
+
+### Example
+
+```bash
+githotfixstartalert
+```
+
+_Function has no arguments._
 
 ## githotfixstart()
 
@@ -352,26 +375,25 @@ Crea un nuevo hotfix a partir de una rama y envia un aviso a Rocket.Chat
 ### Example
 
 ```bash
+#Iniciar hotfix
+githotfixstartalert
 githotfixstart
+
+#Realizar cambios para el hotfix y actualizar Changelog arriba y abajo
+git add .
+git commit -m "Release changelog"
+
+#Terminar hotfix 
+gitreleasefinish
+
+#Desplegar el hotfix
+...
+
+#Notificar despligue
+githotfixfinishalert
 ```
 
-### Arguments
-
-* **$1** (string): Rama de origen para el hotfix, si no se pasa usa master.
-
-## githotfixmerge()
-
-Mezcla los cambios del hotfix sobre la rama pasada como parametro
-
-### Example
-
-```bash
-githotfixmerge dev
-```
-
-### Arguments
-
-* **$1** (string): Rama sobre la que mezclar el hotfix.
+_Function has no arguments._
 
 ## githotfixfinish()
 
@@ -383,18 +405,16 @@ Finaliza el hotfix, creando una tag y eliminando la rama del hotfix
 githotfixfinish
 ```
 
-### Arguments
+_Function has no arguments._
 
-* **$1** (string): Rama sobre la que finalizar el hotfix, si no se pasa usa master.
+## githotfixfinishalert()
 
-## githotfixdeployed()
-
-Realiza acciones tras el despliegue de un hotfix (por ejemplo avisar en Rocket.Chat)
+Envia un aviso de final de hotfix a Rocket.Chat en los repositorios seleccionados
 
 ### Example
 
 ```bash
-githotfixdeployed
+githotfixfinishalert
 ```
 
 _Function has no arguments._
@@ -403,39 +423,50 @@ _Function has no arguments._
 
 Contiene funciones para realizar la parte GIT de las releases
 
+* [gitreleasestartalert()](#gitreleasestartalert)
 * [gitreleasestart()](#gitreleasestart)
-* [gitreleasemerge()](#gitreleasemerge)
 * [gitreleasefinish()](#gitreleasefinish)
-* [gitreleasedeployed()](#gitreleasedeployed)
+* [gitreleasefinishalert()](#gitreleasefinishalert)
 
+
+## gitreleasestartalert()
+
+Envia un aviso de comienzo de release a Rocket.Chat en los repositorios seleccionados
+
+### Example
+
+```bash
+gitreleasestartalert
+```
+
+_Function has no arguments._
 
 ## gitreleasestart()
 
-Crea una nueva release a partir de una rama y envia un aviso a Rocket.Chat
+Crea una nueva release a partir de dev
 
 ### Example
 
 ```bash
+#Iniciar release
+gitreleasestartalert
 gitreleasestart
+
+#Actualizar Changelog arriba y abajo
+git add .
+git commit -m "Release changelog"
+
+#Terminar release 
+gitreleasefinish
+
+#Desplegar la release
+...
+
+#Notificar despligue
+gitreleasefinishalert
 ```
 
-### Arguments
-
-* **$1** (string): Rama de origen para la release, si no se pasa se usa dev.
-
-## gitreleasemerge()
-
-Mezcla los cambios de la release sobre la rama pasada como parametro
-
-### Example
-
-```bash
-gitreleasemerge dev
-```
-
-### Arguments
-
-* **$1** (string): Rama sobre la que mezclar la release.
+_Function has no arguments._
 
 ## gitreleasefinish()
 
@@ -447,18 +478,16 @@ Finaliza la release, creando una tag y eliminando la rama de la release
 gitreleasefinish
 ```
 
-### Arguments
+_Function has no arguments._
 
-* **$1** (string): Rama sobre la que finalizar la release, si no se pasa usa master.
+## gitreleasefinishalert()
 
-## gitreleasedeployed()
-
-Realiza acciones tras el despliegue de una release (por ejemplo avisar en Rocket.Chat)
+Envia un aviso de final de release a Rocket.Chat en los repositorios seleccionados
 
 ### Example
 
 ```bash
-gitreleasedeployed
+gitreleasefinishalert
 ```
 
 _Function has no arguments._

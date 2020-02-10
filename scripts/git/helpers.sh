@@ -39,7 +39,13 @@ cdgit () {
     fi
 }
 
-# Devuelve los repositorios Git disponibles
+##
+# @internal
+#
+# @description Devuelve los repositorios Git disponibles
+#
+# @noargs
+#
 private_gitpaths () {
     local pwd=$(pwd)
     local excludePaths=("prueba")
@@ -48,8 +54,16 @@ private_gitpaths () {
     cd $pwd
 }
 
-## Recorre los paths con repositorios GIT y ejecuta el primer parametro pasandole como primer parametro el path 
-## y como segundo parametro opcional el segundo parametro recibido
+##
+# @internal
+#
+# @description Recorre los paths con repositorios GIT y ejecuta el primer parametro pasandole como primer parametro el path 
+# y como segundo parametro opcional el segundo parametro recibido
+#
+# @arg $1 string Comando a ejecutar.
+# @arg $2 string Parámetro opcional a pasar a la llamada.
+# @arg $3 array Opcional, lista de repositorios a los que aplicar la llamada.
+#
 private_gitlooppaths () {
     local secondArgument=""
     if [ $# -ge 2 ]
@@ -79,7 +93,14 @@ private_gitlooppaths () {
     cd $pwd
 }
 
-## Recibe una rama como parametro y hace checkout en todos los repositorios GIT a esa rama
+##
+# @internal
+#
+# @description Recibe una rama local como parametro y hace checkout de un repositorio a esa rama
+#
+# @arg $1 string Repositorio.
+# @arg $2 string Rama local a la que hacer checkout.
+#
 private_gitcheckout () {
     local branch=$2
     local branches=($(git branch | grep "[^* ]+" -Eo))
@@ -143,7 +164,14 @@ gitcheckout () {
     fi
 }
 
-## Recibe una rama remota como parametro y hace checkout en todos los repositorios GIT a esa rama remota
+##
+# @internal
+#
+# @description Recibe una rama remota como parametro y hace checkout de un repositorio a esa rama
+#
+# @arg $1 string Repositorio.
+# @arg $2 string Rama remota a la que hacer checkout.
+#
 private_gitcheckoutremote () {
     local branch=$2
     local remotebranch="origin/$branch"
@@ -242,7 +270,13 @@ gitbranch () {
     echo $branch
 }
 
-# Muestra el branch y la version del repositorio
+##
+# @internal
+#
+# @description Muestra el branch y la version del repositorio
+#
+# @arg $1 string Repositorio.
+#
 private_gitresume () {
     local branch=$(gitbranch)
     local version=$(gitversion)
@@ -250,7 +284,13 @@ private_gitresume () {
     echo "$_FONTBOLD_$1 ($version)$_FONTDEFAULT_ on branch $_COLORGREEN_$branch$_COLORDEFAULT_"
 }
 
-# Muestra el branch y la version del repositorio
+##
+# @internal
+#
+# @description Muestra el branch y la version del repositorio
+#
+# @arg $1 string Repositorio.
+#
 private_gitbranch () {
     local resume=$(private_gitresume $1)
     printtext "Path $resume"
@@ -268,7 +308,13 @@ gitbranchall () {
     private_gitlooppaths "private_gitbranch"
 }
 
-## Hace pull en todos los repositorios GIT
+##
+# @internal
+#
+# @description Hace pull en un repositorio
+#
+# @arg $1 string Repositorio.
+#
 private_gitpull () {
     local resume="$(private_gitresume $1)"
     printtitle "$resume"
@@ -278,7 +324,6 @@ private_gitpull () {
     printseparator
     printlinebreak
 }
-
 
 ## 
 # @description Realiza un pull sobre los repositorios seleccionados
@@ -312,7 +357,13 @@ gitpull () {
     fi
 }
 
-## Devuelve el status en todos los repositorios GIT
+##
+# @internal
+#
+# @description Devuelve el estado de un repositorio
+#
+# @arg $1 string Repositorio.
+#
 private_gitstatus () {
     local resume="$(private_gitresume $1)"
     printtitle "$resume"
@@ -354,7 +405,14 @@ gitstatus () {
     fi
 }
 
-## Devuelve el log de todos los repositorios GIT
+##
+# @internal
+#
+# @description Devuelve el log de un repositorio
+#
+# @arg $1 string Repositorio.
+# @arg $2 int Numero de lineas del log a mostrar.
+#
 private_gitlog () {
     local resume="$(private_gitresume $1)"
     printtitle "$resume"
@@ -405,7 +463,13 @@ gitlog () {
     fi
 }
 
-## Hace un fetch en todos los repositorios GIT
+##
+# @internal
+#
+# @description Hace fetch en un repositorio
+#
+# @arg $1 string Repositorio.
+#
 private_gitfetch () {
     local resume="$(private_gitresume $1)"
     printtitle "$resume"
@@ -468,7 +532,13 @@ gitbranchages () {
     git for-each-ref --sort='-committerdate:iso8601' --format='   %(committerdate:iso8601)%09%(committeremail)%09%(refname:short)' refs/remotes
 }
 
-# Muestra un select para elegir paths de GIT
+##
+# @internal
+#
+# @description Muestra un select para elegir paths de GIT
+#
+# @noargs
+#
 private_gitpickpaths () {
     local retval=$1
     local paths=( $(private_gitpaths) )

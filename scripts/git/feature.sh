@@ -7,7 +7,18 @@
 # @description Crea una nueva feature a partir de una rama
 #
 # @example
+#   #Iniciar feature
 #   gitfeaturestart GPHADPR-2104 dev
+#   
+#   #Opcionalmente nos traemos los cambios de dev a la feature cuando queramos
+#   gitfeatureupdate GPHADPR-2104 dev 
+#   
+#   #Realizar cambios de la feature y actualizar Changelog
+#   git add .
+#   git commit -m "GPHADPR-2104 - ...."
+#   
+#   #Terminar feature 
+#   gitfeaturefinish GPHADPR-2104 dev
 #
 # @arg $1 string Nombre para la feature, se generara la rama feature/nombre.
 # @arg $2 string Rama local de origen para la feature.
