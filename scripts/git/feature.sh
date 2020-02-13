@@ -49,9 +49,11 @@ gitfeaturestart () {
                     
                     # Iniciamos la nueva feature
                     local newBranch="feature/$1"
+                    git stash
                     git checkout $fromBranch
                     git pull
                     git checkout -b $newBranch
+                    git stash apply
 
                     printlinebreak
                     printsuccess "Branch $newBranch created successfully"
@@ -171,10 +173,12 @@ gitfeatureupdate () {
                     if [[ " ${branches[@]} " =~ " ${featureBranch} " ]]; then
                         printtitle "Update feature $_COLORYELLOW_$1$_COLORDEFAULT_ from branch $_COLORGREEN_$fromBranch$_COLORDEFAULT_"
 
+                        git stash
                         git checkout $fromBranch
                         git pull
                         git checkout $featureBranch
                         git merge --no-ff $fromBranch
+                        git stash apply
 
                         printlinebreak
                         printsuccess "Feature $1 updated successfully"

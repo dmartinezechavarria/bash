@@ -100,7 +100,7 @@ githotfixstart () {
             cd $gitroot
 
             # Calculamos el nombre para el hotfix a partir del changelog
-            local version=$(gitversion) 
+            local version=$(gitversion)
             local newVersion=$(githotfixnextversion)
             local newBranch="hotfix/$newVersion"
 
@@ -113,9 +113,11 @@ githotfixstart () {
                 printlinebreak
 
                 # Creamos la nueva rama
+                git stash
                 git checkout $fromBranch
                 git pull
                 git checkout -b $newBranch
+                git stash apply
 
                 printlinebreak
                 printsuccess "Branch $newBranch created successfully"
@@ -222,12 +224,12 @@ githotfixfinish () {
 # @noargs
 #
 githotfixfinishalert () {
-    printtitle "Release finish alert"
+    printtitle "Hotfix finish alert"
 
     local selectedRepositories=()
     private_gitpickpaths selectedRepositories
 
-    private_gitlooppaths "private_gitreleasefinishalert" "" "$(echo ${selectedRepositories[@]})"
+    private_gitlooppaths "private_githotfixfinishalert" "" "$(echo ${selectedRepositories[@]})"
 }
 
 ##

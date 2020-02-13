@@ -115,9 +115,11 @@ gitreleasestart () {
                 printlinebreak
 
                 # Creamos la nueva rama
+                git stash
                 git checkout $fromBranch
                 git pull
                 git checkout -b $newBranch
+                git stash apply
 
                 printlinebreak
                 printsuccess "Branch $newBranch created successfully"
