@@ -48,6 +48,7 @@
     - [rocketchatsendmessage()](#rocketchatsendmessage())
   - [Servers/Development (servers/development.sh)](#servers/development-(servers/development.sh))
     - [devremakeconfig()](#devremakeconfig())
+    - [devsetmemoryvars()](#devsetmemoryvars())
     - [devcleancache()](#devcleancache())
     - [devlogphp()](#devlogphp())
   - [Servers/Sync (servers/sync.sh)](#servers/sync-(servers/sync.sh))
@@ -703,6 +704,7 @@ rocketchatsendmessage "@dmartinezechavarria" "Mensaje de prueba"
 Contiene funciones para interactuar con el servidor de desarrollo
 
 * [devremakeconfig()](#devremakeconfig)
+* [devsetmemoryvars()](#devsetmemoryvars)
 * [devcleancache()](#devcleancache)
 * [devlogphp()](#devlogphp)
 
@@ -715,6 +717,18 @@ Ejecuta el remake de config
 
 ```bash
 devremakeconfig
+```
+
+_Function has no arguments._
+
+## devsetmemoryvars()
+
+Setea las variables de memoria necesarias para arrancar AP-2
+
+### Example
+
+```bash
+devsetmemoryvars
 ```
 
 _Function has no arguments._
