@@ -13,6 +13,7 @@ source $SCRIPTPATH/scripts/styles.sh
 source $SCRIPTPATH/scripts/rocketchat.sh
 
 # Helpers
+source $SCRIPTPATH/scripts/walle.sh
 source $SCRIPTPATH/scripts/helpers.sh
 
 # GIT

@@ -785,3 +785,6 @@ Variables con estilos para las salidas de los comandos
 
 
 
+
+
+
