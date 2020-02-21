@@ -42,6 +42,7 @@
     - [debugarray()](#debugarray())
     - [joinby()](#joinby())
     - [printtitle()](#printtitle())
+    - [printwalle()](#printwalle())
     - [killsshagent()](#killsshagent())
     - [promptformultiselect()](#promptformultiselect())
   - [Rocketchat (rocketchat.sh)](#rocketchat-(rocketchat.sh))
@@ -507,6 +508,7 @@ Contiene funciones generales para bash que utilizan el resto de scripts
 * [debugarray()](#debugarray)
 * [joinby()](#joinby)
 * [printtitle()](#printtitle)
+* [printwalle()](#printwalle)
 * [killsshagent()](#killsshagent)
 * [promptformultiselect()](#promptformultiselect)
 
@@ -649,6 +651,18 @@ printtitle "Texto del titulo"
 
 * **$1** (string): Texto del titulo.
 
+## printwalle()
+
+Dibuja a Wall-e
+
+### Example
+
+```bash
+printwalle
+```
+
+_Function has no arguments._
+
 ## killsshagent()
 
 Mata los procesos de SSH agent que haya corriendo
@@ -782,9 +796,6 @@ syncservers pdc pre
 # Styles (styles.sh)
 
 Variables con estilos para las salidas de los comandos
-
-
-
 
 
 

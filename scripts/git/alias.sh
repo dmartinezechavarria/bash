@@ -15,7 +15,13 @@ alias gitfetchall='gitfetch all'
 # @arg $1 string Rama local
 #
 gitcheckoutall () {
-    gitcheckout $1 all
+    if [ -z "$1" ] 
+    then
+        printerror "No local branch supplied"
+        return 1
+    else
+        gitcheckout $1 all
+    fi
 }
 
 ##
@@ -26,9 +32,14 @@ gitcheckoutall () {
 # @arg $1 string Rama remota
 #
 gitcheckoutremoteall () {
-    gitcheckoutremote $1 all
+    if [ -z "$1" ] 
+    then
+        printerror "No remote branch supplied"
+        return 1
+    else
+        gitcheckoutremote $1 all
+    fi
 }
-
 
 ##
 # @internal
@@ -38,5 +49,11 @@ gitcheckoutremoteall () {
 # @arg $1 int Opciona, número de líneas a mostrar
 #
 gitlogall () {
-    gitlog $1 all
+    if [ -z "$1" ] 
+    then
+        printerror "No number of lines supplied"
+        return 1
+    else
+        gitlog $1 all
+    fi
 }

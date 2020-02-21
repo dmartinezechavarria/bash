@@ -47,10 +47,12 @@ cdgit () {
 # @noargs
 #
 private_gitpaths () {
+    if [ -z ${GITIGNOREFOLDERS+x} ]; then 
+        GITIGNOREFOLDERS=()
+    fi
     local pwd=$(pwd)
-    local excludePaths=("prueba")
     cd $GITROOT
-    echo $(ls -d */ | while read path ; do if ! [[ " ${excludePaths[@]} " =~ " ${path//[\/]} " ]]; then  echo ${path//[\/]} ; fi done;)
+    echo $(ls -d */ | while read path ; do if ! [[ " ${GITIGNOREFOLDERS[@]} " =~ " ${path//[\/]} " ]]; then  echo ${path//[\/]} ; fi done;)
     cd $pwd
 }
 
@@ -278,8 +280,8 @@ gitbranch () {
 # @arg $1 string Repositorio.
 #
 private_gitresume () {
-    local branch=$(gitbranch)
-    local version=$(gitversion)
+    local branch=$(gitbranch 2> /dev/null) 
+    local version=$(gitversion 2> /dev/null)
 
     echo "$_FONTBOLD_$1 ($version)$_FONTDEFAULT_ on branch $_COLORGREEN_$branch$_COLORDEFAULT_"
 }
