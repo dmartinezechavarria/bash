@@ -21,6 +21,7 @@
     - [gitlog()](#gitlog())
     - [gitfetch()](#gitfetch())
     - [gitbranchages()](#gitbranchages())
+    - [gitbranchremove()](#gitbranchremove())
   - [Git/Hotfix (git/hotfix.sh)](#git/hotfix-(git/hotfix.sh))
     - [githotfixstartalert()](#githotfixstartalert())
     - [githotfixstart()](#githotfixstart())
@@ -140,7 +141,7 @@ gitfeaturefinish GPHADPR-2104 dev
 ## gitfeaturefinish()
 
 Finaliza una feature mezclandola con la rama recibida
-Una vez terminada elimina la rama release/xxx
+Una vez terminada elimina la rama feature/xxx
 
 ### Example
 
@@ -170,7 +171,7 @@ gitfeatureupdate GPHADPR-2104 dev
 
 ## gitfeatureremote()
 
-Convierte la rama de la release en una rama remota para trabajar con otras personas
+Convierte la rama de la feature en una rama remota para trabajar con otras personas
 
 ### Example
 
@@ -197,6 +198,7 @@ Contiene funciones generales de GIT
 * [gitlog()](#gitlog)
 * [gitfetch()](#gitfetch)
 * [gitbranchages()](#gitbranchages)
+* [gitbranchremove()](#gitbranchremove)
 
 
 ## cdgit()
@@ -348,6 +350,21 @@ gitbranchages
 
 _Function has no arguments._
 
+## gitbranchremove()
+
+Elimina una rama (local y remota) en los repositorios seleccionados
+
+### Example
+
+```bash
+gitbranchremove feature/PES all
+```
+
+### Arguments
+
+* **$1** (string): Nombre de la rama.
+* **$2** (string): Opcional, si se pasa el valor all se aplica a todos los repositorios, si no se permite elegir.
+
 # Git/Hotfix (git/hotfix.sh)
 
 Contiene funciones para realizar la parte GIT de los hotfix
@@ -383,10 +400,10 @@ githotfixstart
 
 #Realizar cambios para el hotfix y actualizar Changelog arriba y abajo
 git add .
-git commit -m "Release changelog"
+git commit -m "Hotfix changelog"
 
 #Terminar hotfix 
-gitreleasefinish
+githotfixfinish
 
 #Desplegar el hotfix
 ...

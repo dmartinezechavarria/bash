@@ -552,3 +552,68 @@ private_gitpickpaths () {
 
     eval $retval='("${results[@]}")'
 }
+
+##
+# @internal
+#
+# @description Recibe una rama como parametro y la elimina (local y remota)
+#
+# @arg $1 string Repositorio.
+# @arg $2 string Rama local a eliminar.
+#
+private_gitbranchremove () {
+    local branch=$2
+
+    printtext "Removing $_COLORYELLOW_$branch$_COLORDEFAULT_ on $_FONTBOLD_$1$_FONTDEFAULT_"
+
+    git branch -D $branch
+    git push origin --delete $branch
+
+    printsuccess "Removed $branch on $1"
+
+    printlinebreak
+}
+
+## 
+# @description Elimina una rama (local y remota) en los repositorios seleccionados
+#
+# @example
+#   gitbranchremove feature/PES all
+#
+# @arg $1 string Nombre de la rama.
+# @arg $2 string Opcional, si se pasa el valor all se aplica a todos los repositorios, si no se permite elegir.
+#
+gitbranchremove () {
+    if [ -z "$1" ] 
+    then
+        printerror "No branch supplied"
+        return 1
+    else
+        local branch=$1
+
+        printtitle "Git remove branch $_COLORGREEN_$branch$_COLORDEFAULT_"
+        printlinebreak
+        printwarning "WARNING: This process cannot be undone."
+        printlinebreak
+
+        local selectedRepositories=()
+        if [ -z "$2" ] 
+        then
+            private_gitpickpaths selectedRepositories
+        else
+            if [ $2 = "all" ]; 
+            then
+                selectedRepositories=( $(private_gitpaths) )
+            fi
+        fi
+
+        printlinebreak
+
+        if [ ${#selectedRepositories[@]} -eq 0 ]; then
+            printerror "No repositories picked"
+        else
+            private_gitlooppaths "private_gitbranchremove" $branch "$(echo ${selectedRepositories[@]})"
+            printtext "Removed branch $_COLORGREEN_$branch$_COLORDEFAULT_"
+        fi
+    fi
+}

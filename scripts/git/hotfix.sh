@@ -71,10 +71,10 @@ githotfixnextversion () {
 #   
 #   #Realizar cambios para el hotfix y actualizar Changelog arriba y abajo
 #   git add .
-#   git commit -m "Release changelog"
+#   git commit -m "Hotfix changelog"
 #   
 #   #Terminar hotfix 
-#   gitreleasefinish
+#   githotfixfinish
 #   
 #   #Desplegar el hotfix
 #   ...

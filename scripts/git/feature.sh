@@ -76,7 +76,7 @@ gitfeaturestart () {
 
 ##
 # @description Finaliza una feature mezclandola con la rama recibida
-# Una vez terminada elimina la rama release/xxx
+# Una vez terminada elimina la rama feature/xxx
 #
 # @example
 #   gitfeaturefinish GPHADPR-2104 dev
@@ -199,7 +199,7 @@ gitfeatureupdate () {
 }
 
 ##
-# @description Convierte la rama de la release en una rama remota para trabajar con otras personas
+# @description Convierte la rama de la feature en una rama remota para trabajar con otras personas
 #
 # @example
 #   gitfeatureremote GPHADPR-2104
