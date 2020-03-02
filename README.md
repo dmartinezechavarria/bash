@@ -53,6 +53,7 @@
     - [devsetmemoryvars()](#devsetmemoryvars())
     - [devcleancache()](#devcleancache())
     - [devlogphp()](#devlogphp())
+    - [devremovedomainweb()](#devremovedomainweb())
   - [Servers/Sync (servers/sync.sh)](#servers/sync-(servers/sync.sh))
     - [syncservers()](#syncservers())
   - [Styles (styles.sh)](#styles-(styles.sh))
@@ -738,6 +739,7 @@ Contiene funciones para interactuar con el servidor de desarrollo
 * [devsetmemoryvars()](#devsetmemoryvars)
 * [devcleancache()](#devcleancache)
 * [devlogphp()](#devlogphp)
+* [devremovedomainweb()](#devremovedomainweb)
 
 
 ## devremakeconfig()
@@ -787,6 +789,21 @@ devlogphp
 ```
 
 _Function has no arguments._
+
+## devremovedomainweb()
+
+Elimina la carpeta, el vhost, la configuracion fpm y el usuario de un dominio en una maquina
+
+### Example
+
+```bash
+devremovedomainweb entornox255.arsysdesarrollo.lan c4a-davidpes01.com
+```
+
+### Arguments
+
+* **$1** (string): Host de la maquina en la que se quiere eliminar el dominio.
+* **$2** (string): Dominio a eliminar.
 
 # Servers/Sync (servers/sync.sh)
 

@@ -104,3 +104,43 @@ devlogphp () {
     printlinebreak
     printsuccess "Bye"
 }
+
+## 
+# @description Elimina la carpeta, el vhost, la configuracion fpm y el usuario de un dominio en una maquina
+#
+# @example
+#   devremovedomainweb entornox255.arsysdesarrollo.lan c4a-davidpes01.com
+#
+# @arg $1 string Host de la maquina en la que se quiere eliminar el dominio.
+# @arg $2 string Dominio a eliminar.
+#
+devremovedomainweb () {
+    # Comprobamos los parámetros
+    if [ -z "$1" ]
+    then
+        printerror "No host provided"
+        return 1
+    else
+        channel=$1
+
+        if [ -z "$2" ]
+        then
+            printerror "No domain provided"
+            return 1
+        else
+            printtitle "Remove domain web $2"
+                
+            # Sincronizamos
+            printlinebreak
+            printtext "Connecting to $_FONTBOLD_$1$_FONTDEFAULT_ with user $_FONTBOLD_ root$_FONTDEFAULT_ and execute script"
+            printlinebreak
+            printtext "Connecting to server..."
+            printlinebreak
+
+            ssh root@$1 "rm -Rf /etc/httpd/conf/$2/ && rm -Rf /var/www/vhost/$2/ && rm -Rf /etc/httpd/conf/vhost/$2/ && userdel $2"
+
+            printlinebreak
+            printsuccess "Domain $2 removed successfully"
+        fi
+    fi
+}

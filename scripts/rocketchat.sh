@@ -38,8 +38,6 @@ rocketchatsendmessage () {
             --output /dev/null
         fi
     fi
-
-    
 }
 
 # rocketchatstart Function
