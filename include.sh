@@ -25,3 +25,6 @@ source $SCRIPTPATH/scripts/git/release.sh
 # Servers
 source $SCRIPTPATH/scripts/servers/sync.sh
 source $SCRIPTPATH/scripts/servers/development.sh
+
+# Admines
+source $SCRIPTPATH/scripts/admines.sh

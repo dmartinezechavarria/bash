@@ -2,6 +2,9 @@
 
   - [Contenido](#contenido)
   - [Como instalar](#como-instalar)
+  - [Admines (admines.sh)](#admines-(admines.sh))
+    - [adminesversion()](#adminesversion())
+    - [admineslistfunctions()](#admineslistfunctions())
   - [Alias (alias.sh)](#alias-(alias.sh))
   - [Git/Alias (git/alias.sh)](#git/alias-(git/alias.sh))
   - [Git/Feature (git/feature.sh)](#git/feature-(git/feature.sh))
@@ -90,6 +93,42 @@ source $SCRIPTPATH/bash/include.sh
 * Abrir Git Bash para que cargue el fichero **.bashrc**.
 
 
+
+# Admines (admines.sh)
+
+Contiene funciones para realizar acciones sobre los admines
+
+* [adminesversion()](#adminesversion)
+* [admineslistfunctions()](#admineslistfunctions)
+
+
+## adminesversion()
+
+Devuelve las versiones de los admines en una máquina Linux
+
+### Example
+
+```bash
+adminesversion entorno256.arsysdesarrollo.lan
+```
+
+### Arguments
+
+* **$1** (string): Hostname de la maquina
+
+## admineslistfunctions()
+
+Extrae las funciones de un fichero perl
+
+### Example
+
+```bash
+admineslistfunctions admindns.pm
+```
+
+### Arguments
+
+* **$1** (string): Ruta al fichero del que extraer las funciones.
 
 # Alias (alias.sh)
 
