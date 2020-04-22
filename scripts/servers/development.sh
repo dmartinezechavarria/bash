@@ -44,6 +44,46 @@ devsetmemoryvars () {
 }
 
 ## 
+# @description Genera un nuevo token Kestone para las APIs
+#
+# @example
+#   devkeystonegeneratetoken
+#
+# @noargs
+#
+devkeystonegeneratetoken () {
+
+    printtitle "Generate Keystone Token"
+        
+    printtitleconnect $DEVSERVERHOST $DEVSERVERUSER
+
+    ssh -i $RSAPRIVATEKEY $DEVSERVERUSER@$DEVSERVERHOST "php72 /usr/share/app/$ARSYSUSER/procws/bin/scripts/generateKeystoneToken.php"
+
+    printlinebreak
+    printsuccess "Check Keystone token generation in Kibana"
+}
+
+## 
+# @description Genera un nuevo token Kestone para las APIs
+#
+# @example
+#   devkeystonegeneratetoken
+#
+# @noargs
+#
+devkeystonesetmemory () {
+
+    printtitle "Set Keystone Token in memory"
+        
+    printtitleconnect $DEVSERVERHOST $DEVSERVERUSER
+
+    ssh -i $RSAPRIVATEKEY $DEVSERVERUSER@$DEVSERVERHOST "php72 /usr/share/app/$ARSYSUSER/procws/bin/scripts/setMemCacheKeystoneToken.php"
+
+    printlinebreak
+    printsuccess "Check Keystone token set in Kibana"
+}
+
+## 
 # @description Elimina la cache de smarty
 #
 # @example
@@ -53,7 +93,7 @@ devsetmemoryvars () {
 #
 devcleancache () {
 
-    printtitle "Remove Smarty cache"
+    printtitle "Clean Smarty cache"
         
     printtitleconnect $DEVSERVERHOST $DEVSERVERUSER
 

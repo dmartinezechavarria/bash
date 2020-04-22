@@ -104,25 +104,38 @@ private_gitlooppaths () {
 # @arg $2 string Rama local a la que hacer checkout.
 #
 private_gitcheckout () {
+    local repository=$1
     local branch=$2
     local branches=($(git branch | grep "[^* ]+" -Eo))
     local currentBranch=$(gitbranch)
 
-    local resume="$(private_gitresume $1)"
-    printtitle "$resume => $_COLORYELLOW_$branch$_COLORDEFAULT_"
+    ( # try
+        set -e # Exit if error in any command
 
-    if [[ " ${branches[@]} " =~ " ${branch} " ]]; then
-        git checkout $branch
-        printtext "Path $_FONTBOLD_$1$_FONTDEFAULT_ on branch $_COLORGREEN_$branch$_COLORDEFAULT_ now"
-    else
-        printtext "Branch $_COLORGREEN_$branch$_COLORDEFAULT_ not found in $_FONTBOLD_$1$_FONTDEFAULT_"
+        local resume="$(private_gitresume $repository)"
+        printtitle "Merging $_COLORYELLOW_$branch$_COLORDEFAULT_ into $resume"
+
+        if [[ " ${branches[@]} " =~ " ${branch} " ]]; then
+            ( set -x; git checkout $branch; )
+            printtext "Path $_FONTBOLD_$repository$_FONTDEFAULT_ on branch $_COLORGREEN_$branch$_COLORDEFAULT_ now"
+        else
+            printtext "Branch $_COLORGREEN_$branch$_COLORDEFAULT_ not found in $_FONTBOLD_$repository$_FONTDEFAULT_"
+            printlinebreak
+            printtext "Available branchs for $_FONTBOLD_$repository$_FONTDEFAULT_:"
+            printarray ${branches[@]}
+            exit 1
+        fi
+
+        printseparator
         printlinebreak
-        printtext "Available branchs for $_FONTBOLD_$1$_FONTDEFAULT_:"
-        printarray ${branches[@]}
+    )
+    errorCode=$?
+    if [ $errorCode -ne 0 ]; then
+        printerror "An error occurred while checkout branch $branch in $repository"
+        printseparator
+        printlinebreak
+        return $errorCode
     fi
-
-    printseparator
-    printlinebreak
 }
 
 ## 
@@ -161,7 +174,6 @@ gitcheckout () {
             printerror "No repositories picked"
         else
             private_gitlooppaths "private_gitcheckout" $branch "$(echo ${selectedRepositories[@]})"
-            printtext "Repositories on branch $_COLORGREEN_$branch$_COLORDEFAULT_"
         fi
     fi
 }
@@ -175,25 +187,38 @@ gitcheckout () {
 # @arg $2 string Rama local a mezclar.
 #
 private_gitmerge () {
+    local repository=$1
     local branch=$2
     local branches=($(git branch | grep "[^* ]+" -Eo))
     local currentBranch=$(gitbranch)
 
-    local resume="$(private_gitresume $1)"
-    printtitle "Merging $_COLORYELLOW_$branch$_COLORDEFAULT_ into $resume"
+    ( # try
+        set -e # Exit if error in any command
 
-    if [[ " ${branches[@]} " =~ " ${branch} " ]]; then
-        git merge --no-ff $branch
-        printtext "Branch $_COLORGREEN_$branch$_COLORDEFAULT_ merged in $_FONTBOLD_$1$_FONTDEFAULT_"
-    else
-        printtext "Branch $_COLORGREEN_$branch$_COLORDEFAULT_ not found in $_FONTBOLD_$1$_FONTDEFAULT_"
+        local resume="$(private_gitresume $repository)"
+        printtitle "Merging $_COLORYELLOW_$branch$_COLORDEFAULT_ into $resume"
+
+        if [[ " ${branches[@]} " =~ " ${branch} " ]]; then
+            ( set -x; git merge --no-ff $branch; )
+            printtext "Branch $_COLORGREEN_$branch$_COLORDEFAULT_ merged in $_FONTBOLD_$repository$_FONTDEFAULT_"
+        else
+            printtext "Branch $_COLORGREEN_$branch$_COLORDEFAULT_ not found in $_FONTBOLD_$repository$_FONTDEFAULT_"
+            printlinebreak
+            printtext "Available branchs for $_FONTBOLD_$repository$_FONTDEFAULT_:"
+            printarray ${branches[@]}
+            exit 1
+        fi
+
+        printseparator
         printlinebreak
-        printtext "Available branchs for $_FONTBOLD_$1$_FONTDEFAULT_:"
-        printarray ${branches[@]}
+    )
+    errorCode=$?
+    if [ $errorCode -ne 0 ]; then
+        printerror "An error occurred while merge in $repository"
+        printseparator
+        printlinebreak
+        return $errorCode
     fi
-
-    printseparator
-    printlinebreak
 }
 
 ## 
@@ -246,31 +271,45 @@ gitmerge () {
 # @arg $2 string Rama remota a la que hacer checkout.
 #
 private_gitcheckoutremote () {
+    local repository=$1
     local branch=$2
     local remotebranch="origin/$branch"
     local branches=($(git branch -a | grep "[^* ]+" -Eo))
     local currentBranch=$(gitbranch)
 
-    local resume="$(private_gitresume $1)"
-    printtitle "$resume => $_COLORYELLOW_$branch$_COLORDEFAULT_"
+    ( # try
+        set -e # Exit if error in any command
 
-    if [[ " ${branches[@]} " =~ " remotes/${remotebranch} " ]]; then
-        git checkout --track $remotebranch
-        if [ $? -eq 0 ]; then
-            printtext "Path $_FONTBOLD_$1$_FONTDEFAULT_ on branch $_COLORGREEN_$branch$_COLORDEFAULT_ now"
+        local resume="$(private_gitresume $repository)"
+        printtitle "$resume => $_COLORYELLOW_$branch$_COLORDEFAULT_"
+
+        if [[ " ${branches[@]} " =~ " remotes/${remotebranch} " ]]; then
+            ( set -x; git checkout --track $remotebranch; )
+            
+            if [ $? -eq 0 ]; then
+                printtext "Path $_FONTBOLD_$repository$_FONTDEFAULT_ on branch $_COLORGREEN_$branch$_COLORDEFAULT_ now"
+            else
+                ( set -x; git checkout $branch; )
+                printtext "Branch $_COLORGREEN_$branch$_COLORDEFAULT_ already exists checkout $_FONTBOLD_$repository$_FONTDEFAULT_ to it"
+            fi  
         else
-            git checkout $branch
-            printtext "Branch $_COLORGREEN_$branch$_COLORDEFAULT_ already exists checkout $_FONTBOLD_$1$_FONTDEFAULT_ to it"
-        fi  
-    else
-        printtext "Branch $_COLORGREEN_$branch$_COLORDEFAULT_ not found in $_FONTBOLD_$1$_FONTDEFAULT_"
-        printlinebreak
-        printtext "Available branchs for $_FONTBOLD_$1$_FONTDEFAULT_:"
-        printarray ${branches[@]}
-    fi
+            printtext "Branch $_COLORGREEN_$branch$_COLORDEFAULT_ not found in $_FONTBOLD_$repository$_FONTDEFAULT_"
+            printlinebreak
+            printtext "Available branchs for $_FONTBOLD_$repository$_FONTDEFAULT_:"
+            printarray ${branches[@]}
+            exit 1
+        fi
 
-    printseparator
-    printlinebreak
+        printseparator
+        printlinebreak
+    )
+    errorCode=$?
+    if [ $errorCode -ne 0 ]; then
+        printerror "An error occurred while checkout branch $branch in $repository"
+        printseparator
+        printlinebreak
+        return $errorCode
+    fi
 }
 
 ## 
@@ -309,7 +348,6 @@ gitcheckoutremote () {
             printerror "No repositories picked"
         else
             private_gitlooppaths "private_gitcheckoutremote" $branch "$(echo ${selectedRepositories[@]})"
-            printtext "Repositories on branch $_COLORGREEN_$branch$_COLORDEFAULT_"
         fi
     fi
 }
@@ -389,13 +427,26 @@ gitbranchall () {
 # @arg $1 string Repositorio.
 #
 private_gitpull () {
-    local resume="$(private_gitresume $1)"
-    printtitle "$resume"
+    local repository=$1
 
-    git pull
+    ( # try
+        set -e # Exit if error in any command
 
-    printseparator
-    printlinebreak
+        local resume="$(private_gitresume $repository)"
+        printtitle "$resume"
+
+        ( set -x; git pull; )
+
+        printseparator
+        printlinebreak
+    )
+    errorCode=$?
+    if [ $errorCode -ne 0 ]; then
+        printerror "An error occurred while pull $repository"
+        printseparator
+        printlinebreak
+        return $errorCode
+    fi
 }
 
 ## 
@@ -426,7 +477,6 @@ gitpull () {
         printerror "No repositories picked"
     else
         private_gitlooppaths "private_gitpull" "" "$(echo ${selectedRepositories[@]})"
-        printtext "Repositories up to date"
     fi
 }
 
@@ -438,13 +488,26 @@ gitpull () {
 # @arg $1 string Repositorio.
 #
 private_gitstatus () {
-    local resume="$(private_gitresume $1)"
-    printtitle "$resume"
+    local repository=$1
 
-    git status
+    ( # try
+        set -e # Exit if error in any command
 
-    printseparator
-    printlinebreak
+        local resume="$(private_gitresume $repository)"
+        printtitle "$resume"
+
+        git status
+
+        printseparator
+        printlinebreak
+    )
+    errorCode=$?
+    if [ $errorCode -ne 0 ]; then
+        printerror "An error occurred while show status for $repository"
+        printseparator
+        printlinebreak
+        return $errorCode
+    fi
 }
 
 ## 
@@ -487,13 +550,27 @@ gitstatus () {
 # @arg $2 int Numero de lineas del log a mostrar.
 #
 private_gitlog () {
-    local resume="$(private_gitresume $1)"
-    printtitle "$resume"
+    local repository=$1
+    local lines=$2
 
-    git log --pretty=format:"%Cgreen%an%Creset %C(bold)(%ar):%Creset %s" -n $2
+    ( # try
+        set -e # Exit if error in any command
 
-    printseparator
-    printlinebreak
+        local resume="$(private_gitresume $repository)"
+        printtitle "$resume"
+
+        git log --pretty=format:"%Cgreen%an%Creset %C(bold)(%ar):%Creset %s" -n $lines
+
+        printseparator
+        printlinebreak
+    )
+    errorCode=$?
+    if [ $errorCode -ne 0 ]; then
+        printerror "An error occurred while show log for $repository"
+        printseparator
+        printlinebreak
+        return $errorCode
+    fi
 }
 
 ## 
@@ -544,14 +621,27 @@ gitlog () {
 # @arg $1 string Repositorio.
 #
 private_gitfetch () {
-    local resume="$(private_gitresume $1)"
-    printtitle "$resume"
+    local repository=$1
 
-    git fetch
-    printsuccess "$1 is up to date"
+    ( # try
+        set -e # Exit if error in any command
 
-    printseparator
-    printlinebreak
+        local resume="$(private_gitresume $repository)"
+        printtitle "$resume"
+
+        ( set -x; git fetch; )
+        printsuccess "$repository is up to date"
+
+        printseparator
+        printlinebreak
+    )
+    errorCode=$?
+    if [ $errorCode -ne 0 ]; then
+        printerror "An error occurred while fetch $repository"
+        printseparator
+        printlinebreak
+        return $errorCode
+    fi
 }
 
 ## 
@@ -595,14 +685,26 @@ gitfetch () {
 # @noargs
 #
 gitbranchages () {
-    printtitle "Last commit date\t\tAuthor\t\t\tBranch"
+    ( # try
+        set -e # Exit if error in any command
 
-    printtext "Local branches"
-    git for-each-ref --sort='-committerdate:iso8601' --format='   %(committerdate:iso8601)%09%(committeremail)%09%(refname:short)' refs/heads
-    
-    printlinebreak
-    printtext "Remote branches"
-    git for-each-ref --sort='-committerdate:iso8601' --format='   %(committerdate:iso8601)%09%(committeremail)%09%(refname:short)' refs/remotes
+        printtitle "Last commit date\t\tAuthor\t\t\tBranch"
+        
+        printtext "Local branches"
+
+        git for-each-ref --sort='-committerdate:iso8601' --format='   %(committerdate:iso8601)%09%(committeremail)%09%(refname:short)' refs/heads
+
+        printlinebreak
+
+        printtext "Remote branches"
+
+        git for-each-ref --sort='-committerdate:iso8601' --format='   %(committerdate:iso8601)%09%(committeremail)%09%(refname:short)' refs/remotes 
+    )
+    errorCode=$?
+    if [ $errorCode -ne 0 ]; then
+        printerror "An error occurred while getting branches"
+        return $errorCode
+    fi
 }
 
 ##
@@ -635,14 +737,22 @@ private_gitpickpaths () {
 private_gitbranchremove () {
     local branch=$2
 
-    printtext "Removing $_COLORYELLOW_$branch$_COLORDEFAULT_ on $_FONTBOLD_$1$_FONTDEFAULT_"
+    ( # try
+        set -e # Exit if error in any command
 
-    git branch -D $branch
-    git push origin --delete $branch
+        printtext "Removing $_COLORYELLOW_$branch$_COLORDEFAULT_ on $_FONTBOLD_$1$_FONTDEFAULT_"
 
-    printsuccess "Removed $branch on $1"
+        ( set -x; git branch -D $branch; git push origin --delete $branch; )
 
-    printlinebreak
+        printsuccess "Removed $branch on $1"
+        printlinebreak
+    )
+    errorCode=$?
+    if [ $errorCode -ne 0 ]; then
+        printerror "An error occurred while remove branch $branch"
+        printlinebreak
+        return $errorCode
+    fi
 }
 
 ## 
@@ -684,7 +794,6 @@ gitbranchremove () {
             printerror "No repositories picked"
         else
             private_gitlooppaths "private_gitbranchremove" $branch "$(echo ${selectedRepositories[@]})"
-            printtext "Removed branch $_COLORGREEN_$branch$_COLORDEFAULT_"
         fi
     fi
 }

@@ -56,6 +56,8 @@
   - [Servers/Development (servers/development.sh)](#servers/development-(servers/development.sh))
     - [devremakeconfig()](#devremakeconfig())
     - [devsetmemoryvars()](#devsetmemoryvars())
+    - [devkeystonegeneratetoken()](#devkeystonegeneratetoken())
+    - [devkeystonesetmemory()](#devkeystonesetmemory())
     - [devcleancache()](#devcleancache())
     - [devlogphp()](#devlogphp())
     - [devremovedomainweb()](#devremovedomainweb())
@@ -810,6 +812,8 @@ Contiene funciones para interactuar con el servidor de desarrollo
 
 * [devremakeconfig()](#devremakeconfig)
 * [devsetmemoryvars()](#devsetmemoryvars)
+* [devkeystonegeneratetoken()](#devkeystonegeneratetoken)
+* [devkeystonesetmemory()](#devkeystonesetmemory)
 * [devcleancache()](#devcleancache)
 * [devlogphp()](#devlogphp)
 * [devremovedomainweb()](#devremovedomainweb)
@@ -835,6 +839,30 @@ Setea las variables de memoria necesarias para arrancar AP-2
 
 ```bash
 devsetmemoryvars
+```
+
+_Function has no arguments._
+
+## devkeystonegeneratetoken()
+
+Genera un nuevo token Kestone para las APIs
+
+### Example
+
+```bash
+devkeystonegeneratetoken
+```
+
+_Function has no arguments._
+
+## devkeystonesetmemory()
+
+Genera un nuevo token Kestone para las APIs
+
+### Example
+
+```bash
+devkeystonegeneratetoken
 ```
 
 _Function has no arguments._

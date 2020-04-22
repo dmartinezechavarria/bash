@@ -152,9 +152,7 @@ printtitle () {
 #
 printtitleconnect () {
     printlinebreak
-    printtext "Connecting to $_FONTBOLD_$1$_FONTDEFAULT_ with user$_FONTBOLD_ $2$_FONTDEFAULT_"
-    printlinebreak
-    printtext "Connecting to server..."
+    printtext "Connecting to $_FONTBOLD_$1$_FONTDEFAULT_ with user$_FONTBOLD_ $2$_FONTDEFAULT_..."
     printlinebreak
 }
 
