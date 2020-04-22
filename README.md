@@ -15,6 +15,7 @@
   - [Git/Helpers (git/helpers.sh)](#git/helpers-(git/helpers.sh))
     - [cdgit()](#cdgit())
     - [gitcheckout()](#gitcheckout())
+    - [gitmerge()](#gitmerge())
     - [gitcheckoutremote()](#gitcheckoutremote())
     - [gitversion()](#gitversion())
     - [gitbranch()](#gitbranch())
@@ -46,6 +47,7 @@
     - [debugarray()](#debugarray())
     - [joinby()](#joinby())
     - [printtitle()](#printtitle())
+    - [printtitleconnect()](#printtitleconnect())
     - [printwalle()](#printwalle())
     - [killsshagent()](#killsshagent())
     - [promptformultiselect()](#promptformultiselect())
@@ -229,6 +231,7 @@ Contiene funciones generales de GIT
 
 * [cdgit()](#cdgit)
 * [gitcheckout()](#gitcheckout)
+* [gitmerge()](#gitmerge)
 * [gitcheckoutremote()](#gitcheckoutremote)
 * [gitversion()](#gitversion)
 * [gitbranch()](#gitbranch)
@@ -266,6 +269,21 @@ gitcheckout feature/PES all
 ### Arguments
 
 * **$1** (string): Nombre de la rama local.
+* **$2** (string): Opcional, si se pasa el valor all se aplica a todos los repositorios, si no se permite elegir.
+
+## gitmerge()
+
+Realiza un merge --no-ff de la rama pasada como parametro sobre la rama actual sobre los repositorios seleccionados
+
+### Example
+
+```bash
+gitmerge dev all
+```
+
+### Arguments
+
+* **$1** (string): Nombre de la rama local a mezclar.
 * **$2** (string): Opcional, si se pasa el valor all se aplica a todos los repositorios, si no se permite elegir.
 
 ## gitcheckoutremote()
@@ -565,6 +583,7 @@ Contiene funciones generales para bash que utilizan el resto de scripts
 * [debugarray()](#debugarray)
 * [joinby()](#joinby)
 * [printtitle()](#printtitle)
+* [printtitleconnect()](#printtitleconnect)
 * [printwalle()](#printwalle)
 * [killsshagent()](#killsshagent)
 * [promptformultiselect()](#promptformultiselect)
@@ -707,6 +726,21 @@ printtitle "Texto del titulo"
 ### Arguments
 
 * **$1** (string): Texto del titulo.
+
+## printtitleconnect()
+
+Escribe un titulo mientras se conecta a un servidor
+
+### Example
+
+```bash
+printtitle entornoXX.lan root
+```
+
+### Arguments
+
+* **$1** (string): Host.
+* **$2** (string): Usuario.
 
 ## printwalle()
 

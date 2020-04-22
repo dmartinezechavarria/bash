@@ -169,6 +169,77 @@ gitcheckout () {
 ##
 # @internal
 #
+# @description Realiza un merge --no-ff de la rama pasada como parametro sobre la rama actual
+#
+# @arg $1 string Repositorio.
+# @arg $2 string Rama local a mezclar.
+#
+private_gitmerge () {
+    local branch=$2
+    local branches=($(git branch | grep "[^* ]+" -Eo))
+    local currentBranch=$(gitbranch)
+
+    local resume="$(private_gitresume $1)"
+    printtitle "Merging $_COLORYELLOW_$branch$_COLORDEFAULT_ into $resume"
+
+    if [[ " ${branches[@]} " =~ " ${branch} " ]]; then
+        git merge --no-ff $branch
+        printtext "Branch $_COLORGREEN_$branch$_COLORDEFAULT_ merged in $_FONTBOLD_$1$_FONTDEFAULT_"
+    else
+        printtext "Branch $_COLORGREEN_$branch$_COLORDEFAULT_ not found in $_FONTBOLD_$1$_FONTDEFAULT_"
+        printlinebreak
+        printtext "Available branchs for $_FONTBOLD_$1$_FONTDEFAULT_:"
+        printarray ${branches[@]}
+    fi
+
+    printseparator
+    printlinebreak
+}
+
+## 
+# @description Realiza un merge --no-ff de la rama pasada como parametro sobre la rama actual sobre los repositorios seleccionados
+#
+# @example
+#   gitmerge dev all
+#
+# @arg $1 string Nombre de la rama local a mezclar.
+# @arg $2 string Opcional, si se pasa el valor all se aplica a todos los repositorios, si no se permite elegir.
+#
+gitmerge () {
+    if [ -z "$1" ] 
+    then
+        printerror "No destiny local branch supplied"
+        return 1
+    else
+        local branch=$1
+
+        printtitle "Git merge branch $_COLORGREEN_$branch$_COLORDEFAULT_"
+
+        local selectedRepositories=()
+        if [ -z "$2" ] 
+        then
+            private_gitpickpaths selectedRepositories
+        else
+            if [ $2 = "all" ]; 
+            then
+                selectedRepositories=( $(private_gitpaths) )
+            fi
+        fi
+
+        printlinebreak
+
+        if [ ${#selectedRepositories[@]} -eq 0 ]; then
+            printerror "No repositories picked"
+        else
+            private_gitlooppaths "private_gitmerge" $branch $mergeBranch "$(echo ${selectedRepositories[@]})"
+            printtext "All merges completed"
+        fi
+    fi
+}
+
+##
+# @internal
+#
 # @description Recibe una rama remota como parametro y hace checkout de un repositorio a esa rama
 #
 # @arg $1 string Repositorio.

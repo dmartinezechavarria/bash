@@ -14,13 +14,8 @@
 devremakeconfig () {
 
     printtitle "Remake Config"
-        
-    # Sincronizamos
-    printlinebreak
-    printtext "Connecting to $_FONTBOLD_$SYNCSERVERHOST$_FONTDEFAULT_ with user $_FONTBOLD_$SYNCSERVERUSER$_FONTDEFAULT_ and execute script"
-    printlinebreak
-    printtext "Connecting to server..."
-    printlinebreak
+
+    printtitleconnect $DEVSERVERHOST $DEVSERVERUSER
 
     ssh -i $RSAPRIVATEKEY $DEVSERVERUSER@$DEVSERVERHOST -t  "cd /usr/share/app/tools/dev_environment/ && sh environmentManager.sh" < /dev/tty
 
@@ -40,12 +35,7 @@ devsetmemoryvars () {
 
     printtitle "Set memory variables"
         
-    # Sincronizamos
-    printlinebreak
-    printtext "Connecting to $_FONTBOLD_$DEVSERVERHOST$_FONTDEFAULT_ with user $_FONTBOLD_$DEVSERVERUSER$_FONTDEFAULT_ and execute script"
-    printlinebreak
-    printtext "Connecting to server..."
-    printlinebreak
+    printtitleconnect $DEVSERVERHOST $DEVSERVERUSER
 
     ssh -i $RSAPRIVATEKEY $DEVSERVERUSER@$DEVSERVERHOST "php72 /usr/share/app/memoria_ap2_.php"
 
@@ -65,12 +55,7 @@ devcleancache () {
 
     printtitle "Remove Smarty cache"
         
-    # Sincronizamos
-    printlinebreak
-    printtext "Connecting to $_FONTBOLD_$DEVSERVERHOST$_FONTDEFAULT_ with user $_FONTBOLD_$DEVSERVERUSER$_FONTDEFAULT_ and execute script"
-    printlinebreak
-    printtext "Connecting to server..."
-    printlinebreak
+    printtitleconnect $DEVSERVERHOST $DEVSERVERUSER
 
     ssh -i $RSAPRIVATEKEY $DEVSERVERUSER@$DEVSERVERHOST "rm -f /usr/share/app/$ARSYSUSER/panel/tmp/smarty/templates_c/*"
 
@@ -90,12 +75,7 @@ devlogphp () {
 
     printtitle "Show PHP log"
         
-    # Sincronizamos
-    printlinebreak
-    printtext "Connecting to $_FONTBOLD_$DEVSERVERHOST$_FONTDEFAULT_ with user $_FONTBOLD_$DEVSERVERUSER$_FONTDEFAULT_ and execute script"
-    printlinebreak
-    printtext "Connecting to server..."
-    printlinebreak
+    printtitleconnect $DEVSERVERHOST $DEVSERVERUSER
     printtext "Showing PHP log (Ctrl+c to exit)..."
     printlinebreak
 
@@ -128,16 +108,14 @@ devremovedomainweb () {
             printerror "No domain provided"
             return 1
         else
+            local user='root'
+
             printtitle "Remove domain web $2"
                 
             # Sincronizamos
-            printlinebreak
-            printtext "Connecting to $_FONTBOLD_$1$_FONTDEFAULT_ with user $_FONTBOLD_ root$_FONTDEFAULT_ and execute script"
-            printlinebreak
-            printtext "Connecting to server..."
-            printlinebreak
+            printtitleconnect $1 $user
 
-            ssh root@$1 "rm -Rf /etc/httpd/conf/$2/ && rm -Rf /var/www/vhost/$2/ && rm -Rf /etc/httpd/conf/vhost/$2/ && userdel $2"
+            ssh $user@$1 "rm -Rf /etc/httpd/conf/$2/ && rm -Rf /var/www/vhost/$2/ && rm -Rf /etc/httpd/conf/vhost/$2/ && userdel $2"
 
             printlinebreak
             printsuccess "Domain $2 removed successfully"

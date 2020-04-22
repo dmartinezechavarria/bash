@@ -16,7 +16,7 @@ syncservers () {
     # Comprobamos que se pasa un proyecto
     if [ -z "$1" ]
     then
-        printerror "No project provided"
+        printerror "No project provided (pdc | webadmin)"
         return 1
     else
         project=$1
@@ -24,7 +24,7 @@ syncservers () {
         # Comprobamos que se pasa un entorno
         if [ -z "$2" ]
         then
-            printerror "No environment provided"
+            printerror "No environment provided (pre | pro)"
             return 1
         else
             env=$2
@@ -44,11 +44,7 @@ syncservers () {
             fi
 
             printtitle "Syncing project $_COLORYELLOW_$project$_COLORDEFAULT_ environment $_COLORGREEN_$env$_COLORDEFAULT_"
-                
-            # Sincronizamos
-            printlinebreak
-            printtext "Connecting to $_FONTBOLD_$SYNCSERVERHOST$_FONTDEFAULT_ with user $_FONTBOLD_$SYNCSERVERUSER$_FONTDEFAULT_ and execute script"
-            printlinebreak
+            printtitleconnect $SYNCSERVERHOST $SYNCSERVERUSER
             printtext "Syncing machines..."
             printlinebreak
 

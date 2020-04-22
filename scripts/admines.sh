@@ -20,17 +20,13 @@ adminesversion () {
         return 1
     else
         local hostname=$1
+        local user='root'
 
         printtitle "Versiones de los admines en $hostname"
-        
-        # Sincronizamos
-        printlinebreak
-        printtext "Connecting to $_FONTBOLD_$hostname$_FONTDEFAULT_ with user$_FONTBOLD_ root$_FONTDEFAULT_ and execute script"
-        printlinebreak
-        printtext "Connecting to server..."
-        printlinebreak
 
-        ssh -i $RSAPRIVATEKEY root@$hostname "rpm -qa | grep admin"
+        printtitleconnect $hostname $user
+
+        ssh -i $RSAPRIVATEKEY $user@$hostname "rpm -qa | grep -E -- 'admin|arsysDaemonWS'"
 
         printlinebreak 
     fi

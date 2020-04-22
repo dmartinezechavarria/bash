@@ -142,6 +142,23 @@ printtitle () {
 }
 
 ##
+# @description Escribe un titulo mientras se conecta a un servidor
+#
+# @example
+#   printtitle entornoXX.lan root
+#
+# @arg $1 string Host.
+# @arg $2 string Usuario.
+#
+printtitleconnect () {
+    printlinebreak
+    printtext "Connecting to $_FONTBOLD_$1$_FONTDEFAULT_ with user$_FONTBOLD_ $2$_FONTDEFAULT_"
+    printlinebreak
+    printtext "Connecting to server..."
+    printlinebreak
+}
+
+##
 # @description Dibuja a Wall-e
 #
 # @example
