@@ -67,10 +67,12 @@
 
 
 
+<a name="contenido"></a>
 # Contenido
 
 Este repositorio contiene una colección de utilidades para Bash.
 
+<a name="como-instalar"></a>
 # Como instalar
 
 * Clonar o descargar el repositorio a una carpeta de tu equipo (preferentemente **z:/bash**).

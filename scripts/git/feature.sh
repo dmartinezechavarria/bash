@@ -45,23 +45,37 @@ gitfeaturestart () {
                 # Comprobamos que la rama origen existe
                 local branches=($(git branch | grep "[^* ]+" -Eo))
                 if [[ " ${branches[@]} " =~ " ${fromBranch} " ]]; then
-                    printtitle "New feature $_COLORYELLOW_$1$_COLORDEFAULT_ from branch $_COLORGREEN_$fromBranch$_COLORDEFAULT_"
-                    
-                    # Iniciamos la nueva feature
-                    local newBranch="feature/$1"
-                    git stash
-                    git checkout $fromBranch
-                    git pull
-                    git checkout -b $newBranch
-                    git stash apply
+                    ( # try
+                        set -e # Exit if error in any command
 
-                    printlinebreak
-                    printsuccess "Branch $newBranch created successfully"
-                    printlinebreak
-                    printsuccess "Feature $1 started successfully"
-                    printlinebreak
-                    printtext "Use$_FONTBOLD_ gitfeaturefinish $1 $2$_FONTDEFAULT_ to finalize the feature"
-                    printtext "Use$_FONTBOLD_ gitfeatureupdate $1 $2$_FONTDEFAULT_ to update feature from origin branch"
+                        printtitle "New feature $_COLORYELLOW_$1$_COLORDEFAULT_ from branch $_COLORGREEN_$fromBranch$_COLORDEFAULT_"
+                        
+                        # Iniciamos la nueva feature
+                        local newBranch="feature/$1"
+                        ( set -x; git stash; )
+                        ( set -x; git checkout $fromBranch; )
+                        ( set -x; git pull; )
+                        ( set -x; git checkout -b $newBranch; )
+                        local stashCount=($(git stash list | wc -l))
+                        if (( $stashCount > 0 )); then
+                            ( set -x; git stash apply; )
+                        fi
+
+                        printlinebreak
+                        printsuccess "Branch $newBranch created successfully"
+                        printlinebreak
+                        printsuccess "Feature $1 started successfully"
+                        printlinebreak
+                        printtext "Use$_FONTBOLD_ gitfeaturefinish $1 $2$_FONTDEFAULT_ to finalize the feature"
+                        printtext "Use$_FONTBOLD_ gitfeatureupdate $1 $2$_FONTDEFAULT_ to update feature from origin branch"
+                    )
+                    errorCode=$?
+                    if [ $errorCode -ne 0 ]; then
+                        printerror "An error occurred while start feature $1 from $fromBranch"
+                        printseparator
+                        printlinebreak
+                        return $errorCode
+                    fi
                 else
                     printerror "Origin branch '$fromBranch' no exists"
                     return 1
@@ -109,18 +123,29 @@ gitfeaturefinish () {
                     # Comprobamos que la rama feature existe
                     local featureBranch="feature/$1"
                     if [[ " ${branches[@]} " =~ " ${featureBranch} " ]]; then
-                        printtitle "Finish feature $_COLORYELLOW_$1$_COLORDEFAULT_ into branch $_COLORGREEN_$fromBranch$_COLORDEFAULT_"
+                        ( # try
+                            set -e # Exit if error in any command
 
-                        # Terminamos la feature
-                        git checkout $fromBranch
-                        git pull
-                        git merge --no-ff $featureBranch
-                        git branch -d $featureBranch
+                            printtitle "Finish feature $_COLORYELLOW_$1$_COLORDEFAULT_ into branch $_COLORGREEN_$fromBranch$_COLORDEFAULT_"
 
-                        printlinebreak
-                        printsuccess "Branch $featureBranch removed successfully"
-                        printlinebreak
-                        printsuccess "Feature $1 finish successfully"
+                            # Terminamos la feature
+                            ( set -x; git checkout $fromBranch; )
+                            ( set -x; git pull; )
+                            ( set -x; git merge --no-ff $featureBranch; )
+                            ( set -x; git branch -d $featureBranch; )
+
+                            printlinebreak
+                            printsuccess "Branch $featureBranch removed successfully"
+                            printlinebreak
+                            printsuccess "Feature $1 finish successfully"
+                        )
+                        errorCode=$?
+                        if [ $errorCode -ne 0 ]; then
+                            printerror "An error occurred while finish feature $1 into $fromBranch"
+                            printseparator
+                            printlinebreak
+                            return $errorCode
+                        fi
                     else
                         printerror "Feature '$1' no exists"
                         return 1
@@ -171,17 +196,31 @@ gitfeatureupdate () {
                     # Comprobamos que la rama feature existe
                     local featureBranch="feature/$1"
                     if [[ " ${branches[@]} " =~ " ${featureBranch} " ]]; then
-                        printtitle "Update feature $_COLORYELLOW_$1$_COLORDEFAULT_ from branch $_COLORGREEN_$fromBranch$_COLORDEFAULT_"
+                        ( # try
+                            set -e # Exit if error in any command
 
-                        git stash
-                        git checkout $fromBranch
-                        git pull
-                        git checkout $featureBranch
-                        git merge --no-ff $fromBranch
-                        git stash apply
+                            printtitle "Update feature $_COLORYELLOW_$1$_COLORDEFAULT_ from branch $_COLORGREEN_$fromBranch$_COLORDEFAULT_"
 
-                        printlinebreak
-                        printsuccess "Feature $1 updated successfully"
+                            ( set -x; git stash; )
+                            ( set -x; git checkout $fromBranch; )
+                            ( set -x; git pull; )
+                            ( set -x; git checkout $featureBranch; )
+                            ( set -x; git merge --no-ff $fromBranch; ) 
+                            local stashCount=($(git stash list | wc -l))
+                            if (( $stashCount > 0 )); then
+                                ( set -x; git stash apply; )
+                            fi
+
+                            printlinebreak
+                            printsuccess "Feature $1 updated successfully"
+                        )
+                        errorCode=$?
+                        if [ $errorCode -ne 0 ]; then
+                            printerror "An error occurred while update feature $1 from $fromBranch"
+                            printseparator
+                            printlinebreak
+                            return $errorCode
+                        fi
                     else
                         printerror "Feature '$1' no exists"
                         return 1
@@ -222,13 +261,24 @@ gitfeatureremote () {
             local featureBranch="feature/$1"
             local remote="origin"
             if [[ " ${branches[@]} " =~ " ${featureBranch} " ]]; then
-                printtitle "Push feature $_COLORYELLOW_$1$_COLORDEFAULT_ to remote $_COLORGREEN_$remote$_COLORDEFAULT_"
+                ( # try
+                    set -e # Exit if error in any command
 
-                git checkout $featureBranch
-                git push -u $remote $featureBranch
+                    printtitle "Push feature $_COLORYELLOW_$1$_COLORDEFAULT_ to remote $_COLORGREEN_$remote$_COLORDEFAULT_"
 
-                printlinebreak
-                printsuccess "Feature $1 pushed to $remote successfully"
+                    ( set -x; git checkout $featureBranch; )
+                    ( set -x; git push -u $remote $featureBranch; )
+
+                    printlinebreak
+                    printsuccess "Feature $1 pushed to $remote successfully"
+                )
+                errorCode=$?
+                if [ $errorCode -ne 0 ]; then
+                    printerror "An error occurred while push feature $1 to remote"
+                    printseparator
+                    printlinebreak
+                    return $errorCode
+                fi
             else
                 printerror "Feature '$1' no exists"
                 return 1

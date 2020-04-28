@@ -113,7 +113,7 @@ private_gitcheckout () {
         set -e # Exit if error in any command
 
         local resume="$(private_gitresume $repository)"
-        printtitle "Merging $_COLORYELLOW_$branch$_COLORDEFAULT_ into $resume"
+        printtitle "$resume => $_COLORYELLOW_$branch$_COLORDEFAULT_"
 
         if [[ " ${branches[@]} " =~ " ${branch} " ]]; then
             ( set -x; git checkout $branch; )
