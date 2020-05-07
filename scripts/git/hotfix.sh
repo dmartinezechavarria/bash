@@ -62,7 +62,7 @@ githotfixnextversion () {
 }
 
 ##
-# @description Crea un nuevo hotfix a partir de una rama y envia un aviso a Rocket.Chat
+# @description Crea un nuevo hotfix a partir de la rama master
 #
 # @example
 #   #Iniciar hotfix
@@ -105,28 +105,42 @@ githotfixstart () {
             local newBranch="hotfix/$newVersion"
 
             if ! [[ " ${branches[@]} " =~ " ${newBranch} " ]]; then
-                printtitle "New hotfix from branch $_COLORGREEN_$fromBranch$_COLORDEFAULT_ ($version => $_COLORYELLOW_$newVersion$_COLORDEFAULT_)"
-                
-                printlinebreak
-                printwarning "Remember to pick up TRUNK"
-                printwarning "Remember to update the CHANGELOG (up & down) before finish the hotfix"
-                printlinebreak
+                ( # try
+                    set -e # Exit if error in any command
 
-                # Creamos la nueva rama
-                git stash
-                git checkout $fromBranch
-                git pull
-                git checkout -b $newBranch
-                git stash apply
+                    printtitle "New hotfix from branch $_COLORGREEN_$fromBranch$_COLORDEFAULT_ ($version => $_COLORYELLOW_$newVersion$_COLORDEFAULT_)"
+                    
+                    printlinebreak
+                    printwarning "Remember to pick up TRUNK"
+                    printwarning "Remember to update the CHANGELOG (up & down) before finish the hotfix"
+                    printlinebreak
 
-                printlinebreak
-                printsuccess "Branch $newBranch created successfully"
-                printlinebreak
+                    # Creamos la nueva rama
+                    ( set -x; git stash; )
+                    ( set -x; git checkout $fromBranch; )
+                    ( set -x; git pull; )
+                    ( set -x; git checkout -b $newBranch; )
+                    local stashCount=($(git stash list | wc -l))
+                    if (( $stashCount > 0 )); then
+                        ( set -x; git stash apply; )
+                    fi
 
-                printlinebreak
-                printsuccess "Hotfix $newVersion started successfully"
-                printlinebreak
-                printtext "Use$_FONTBOLD_ githotfixfinish$_FONTDEFAULT_ to finalize the hotfix"
+                    printlinebreak
+                    printsuccess "Branch $newBranch created successfully"
+                    printlinebreak
+
+                    printlinebreak
+                    printsuccess "Hotfix $newVersion started successfully"
+                    printlinebreak
+                    printtext "Use$_FONTBOLD_ githotfixfinish$_FONTDEFAULT_ to finalize the hotfix"
+                )
+                errorCode=$?
+                if [ $errorCode -ne 0 ]; then
+                    printerror "An error occurred while hotfix $newVersion starts"
+                    printseparator
+                    printlinebreak
+                    return $errorCode
+                fi
             else
                 printerror "Branch '$newBranch' already exists, do you have hotfix in progress?"
                 return 1
@@ -171,34 +185,45 @@ githotfixfinish () {
             local newBranch="hotfix/$version"
 
             if [[ " ${branches[@]} " =~ " ${newBranch} " ]]; then
-                printtitle "Finishing hotfix $_FONTBOLD_$version$_FONTDEFAULT_"
+                ( # try
+                    set -e # Exit if error in any command
 
-                git fetch
-                git checkout dev
-                git pull
-                git merge --no-ff $newBranch
+                    printtitle "Finishing hotfix $_FONTBOLD_$version$_FONTDEFAULT_"
 
-                printlinebreak
-                printsuccess "Branch $newBranch merged on branch dev successfully"
-                printlinebreak
-                
-                git checkout $fromBranch
-                git pull
-                git merge --no-ff $newBranch
+                    ( set -x; git fetch; )
+                    ( set -x; git checkout dev; )
+                    ( set -x; git pull; )
+                    ( set -x; git merge --no-ff $newBranch; )
 
-                printlinebreak
-                printsuccess "Branch $newBranch merged on branch $fromBranch successfully"
-                printlinebreak
+                    printlinebreak
+                    printsuccess "Branch $newBranch merged on branch dev successfully"
+                    printlinebreak
+                    
+                    ( set -x; git checkout $fromBranch; )
+                    ( set -x; git pull; )
+                    ( set -x; git merge --no-ff $newBranch; )
 
-                # Creamos la nueva tag y borramos la rama
-                git tag $version
-                printlinebreak
-                printsuccess "Tag $version created from branch $fromBranch successfully"
-                git branch -d $newBranch
-                printlinebreak
-                printsuccess "Branch $newBranch removed successfully"
-                printlinebreak
-                printtext "Hotfix$_FONTBOLD_ $version $_FONTDEFAULT_ finished succesfully"
+                    printlinebreak
+                    printsuccess "Branch $newBranch merged on branch $fromBranch successfully"
+                    printlinebreak
+
+                    # Creamos la nueva tag y borramos la rama
+                    ( set -x; git tag $version; )
+                    printlinebreak
+                    printsuccess "Tag $version created from branch $fromBranch successfully"
+                    ( set -x; git branch -d $newBranch; )
+                    printlinebreak
+                    printsuccess "Branch $newBranch removed successfully"
+                    printlinebreak
+                    printtext "Hotfix $_FONTBOLD_$version$_FONTDEFAULT_ finished succesfully"
+                )
+                errorCode=$?
+                if [ $errorCode -ne 0 ]; then
+                    printerror "An error occurred while finishing hotfix $version"
+                    printseparator
+                    printlinebreak
+                    return $errorCode
+                fi
             else
                 printerror "Branch '$newBranch' not exists, do you modify CHANGELOG.md file?"
                 return 1
