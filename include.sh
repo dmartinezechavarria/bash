@@ -12,6 +12,9 @@ source $SCRIPTPATH/scripts/styles.sh
 # Rocketchat
 source $SCRIPTPATH/scripts/rocketchat.sh
 
+# JIRA
+source $SCRIPTPATH/scripts/jira.sh
+
 # Helpers
 source $SCRIPTPATH/scripts/helpers.sh
 

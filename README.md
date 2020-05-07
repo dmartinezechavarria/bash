@@ -51,6 +51,8 @@
     - [printwalle()](#printwalle())
     - [killsshagent()](#killsshagent())
     - [promptformultiselect()](#promptformultiselect())
+  - [Jira (jira.sh)](#jira-(jira.sh))
+    - [jirasendnotice()](#jirasendnotice())
   - [Rocketchat (rocketchat.sh)](#rocketchat-(rocketchat.sh))
     - [rocketchatsendmessage()](#rocketchatsendmessage())
   - [Servers/Development (servers/development.sh)](#servers/development-(servers/development.sh))
@@ -451,7 +453,7 @@ _Function has no arguments._
 
 ## githotfixstart()
 
-Crea un nuevo hotfix a partir de una rama y envia un aviso a Rocket.Chat
+Crea un nuevo hotfix a partir de la rama master
 
 ### Example
 
@@ -785,6 +787,29 @@ promptformultiselect results "$(echo ${array[@]})" "panel procws"
 * **$1** (array): Variable a la que se devolverá el resultado.
 * **$2** (string): String de opciones separadas por espacio.
 * **$3** (string): Opcional, String de las opciones seleccionadas por defecto separadas por espacio.
+
+# Jira (jira.sh)
+
+Contiene funciones para realizar acciones sobre la plataforma Jira
+
+* [jirasendnotice()](#jirasendnotice)
+
+
+## jirasendnotice()
+
+Crea un aviso en Jira para una release o hotfix
+
+### Example
+
+```bash
+jirasendnotice "Titulo de la release o hotfix" 2020-05-06 10:00
+```
+
+### Arguments
+
+* **$1** (string): Mensaje a enviar.
+* **$2** (string): Fecha de la intervencion (YYYY-MM-DD).
+* **$3** (string): Hora de la intervencion (HH:MM), se programará una duración de una hora.
 
 # Rocketchat (rocketchat.sh)
 
