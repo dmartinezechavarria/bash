@@ -810,6 +810,7 @@ jirasendnotice "Titulo de la release o hotfix" 2020-05-06 10:00
 * **$1** (string): Mensaje a enviar.
 * **$2** (string): Fecha de la intervencion (YYYY-MM-DD).
 * **$3** (string): Hora de la intervencion (HH:MM), se programará una duración de una hora.
+* **$4** (string): Opcional, Descripcion larga de la intervencion, si no se pasa se usa el mensaje de $1.
 
 # Rocketchat (rocketchat.sh)
 

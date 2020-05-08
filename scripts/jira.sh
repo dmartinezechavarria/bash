@@ -12,6 +12,7 @@
 # @arg $1 string Mensaje a enviar.
 # @arg $2 string Fecha de la intervencion (YYYY-MM-DD).
 # @arg $3 string Hora de la intervencion (HH:MM), se programará una duración de una hora.
+# @arg $4 string Opcional, Descripcion larga de la intervencion, si no se pasa se usa el mensaje de $1.
 #
 jirasendnotice () {
 
@@ -49,6 +50,12 @@ jirasendnotice () {
                     return 1
                 fi
 
+                local description=$4
+                if [ -z "$4" ]
+                then
+                    description=$1
+                fi
+
                 # Sumamos una hora al inicio
                 local timeParts=(${time//:/ })
                 local hourPart=${timeParts[0]}
@@ -56,6 +63,8 @@ jirasendnotice () {
                 hourPart=$((hourPart + 1))
                 timeParts=( $hourPart $minutePart )
                 local finishTime=$(joinby : "${timeParts[@]}")
+
+                local timeOffset=$(date +%z)
 
                 local JIRAAuthorization=$(echo -n "$UNITEDUSER:$UNITEDPWD" | openssl base64)
 
@@ -80,21 +89,21 @@ jirasendnotice () {
 
                 local data='{
                     "fields": {
-                    "project":
-                    {
-                        "key": "TECCM"
-                    },
-                    "summary": "Fix Wordpress instalation issues",
-                    "description": "Fix Wordpress instalation issues",
-                    "issuetype": { "id": "11408" },
-                    "customfield_13809": { "id": "13304" },
-                    "customfield_13811": [{ "id": "13469" }],
-                    "customfield_11912": { "name": "Auto-Domain - Arsys Products and Tools Development" },
-                    "customfield_13806": "'$date'T'$time':00.908+0000",
-                    "customfield_13807": "'$date'T'$finishTime':00.908+0000",
-                    "labels": ["ARSYS", "PIENSA"],
-                    "customfield_13826": [ {"name": "ArsysPlannedChanges"}, {"name": "dsainzpajares" }, {"name": "flestadomahave" }, {"name": "gagredalabrador" }, {"name": "gbastidarodriguez" }, {"name": "iramirezsuarez" }, {"name": "joriamartinez" }, {"name": "svictormaria" }, {"name": "ivorozbueno" }, {"name": "mfresnedamartinez" }, {"name": "dmartinezechavarria" }, {"name": "jbelmontegoyeneche" } ]
-                }
+                        "project":
+                        {
+                            "key": "TECCM"
+                        },
+                        "summary": "'$message'",
+                        "description": "'$description'",
+                        "issuetype": { "id": "11408" },
+                        "customfield_13809": { "id": "13304" },
+                        "customfield_13811": [{ "id": "13469" }],
+                        "customfield_11912": { "name": "Auto-Domain - Arsys Products and Tools Development" },
+                        "customfield_13806": "'$date'T'$time':00.908'$timeOffset'",
+                        "customfield_13807": "'$date'T'$finishTime':00.908'$timeOffset'",
+                        "labels": ["ARSYS", "PIENSA"],
+                        "customfield_13826": [ {"name": "ArsysPlannedChanges"}, {"name": "dsainzpajares" }, {"name": "flestadomahave" }, {"name": "gagredalabrador" }, {"name": "gbastidarodriguez" }, {"name": "iramirezsuarez" }, {"name": "joriamartinez" }, {"name": "svictormaria" }, {"name": "ivorozbueno" }, {"name": "mfresnedamartinez" }, {"name": "dmartinezechavarria" }, {"name": "jbelmontegoyeneche" } ]
+                    }
                 }'
 
                 local response=$(curl --location --request POST "$JIRAHOST/rest/api/latest/issue" \
@@ -103,7 +112,7 @@ jirasendnotice () {
                 --header "Content-Type: application/json" \
                 --data "$data")
 
-                echo $response
+                printtext $response
             fi
         fi
     fi
