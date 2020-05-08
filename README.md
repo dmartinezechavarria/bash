@@ -797,12 +797,12 @@ Contiene funciones para realizar acciones sobre la plataforma Jira
 
 ## jirasendnotice()
 
-Crea un aviso en Jira para una release o hotfix
+Crea un aviso en Jira para una intervencion
 
 ### Example
 
 ```bash
-jirasendnotice "Titulo de la release o hotfix" 2020-05-06 10:00
+jirasendnotice "Titulo de la intervencion" 2020-05-06 10:00 "Texto largo de la intervencion" cb
 ```
 
 ### Arguments
@@ -811,6 +811,7 @@ jirasendnotice "Titulo de la release o hotfix" 2020-05-06 10:00
 * **$2** (string): Fecha de la intervencion (YYYY-MM-DD).
 * **$3** (string): Hora de la intervencion (HH:MM), se programará una duración de una hora.
 * **$4** (string): Opcional, Descripcion larga de la intervencion, si no se pasa se usa el mensaje de $1.
+* **$5** (string): Opcional, Si se le pasa el valor "cb" incluye a CloudBuilder en el aviso
 
 # Rocketchat (rocketchat.sh)
 

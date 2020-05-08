@@ -4,15 +4,16 @@
 # @brief Contiene funciones para realizar acciones sobre la plataforma Jira
 
 ## 
-# @description Crea un aviso en Jira para una release o hotfix
+# @description Crea un aviso en Jira para una intervencion
 #
 # @example
-#   jirasendnotice "Titulo de la release o hotfix" 2020-05-06 10:00
+#   jirasendnotice "Titulo de la intervencion" 2020-05-06 10:00 "Texto largo de la intervencion" cb
 #
 # @arg $1 string Mensaje a enviar.
 # @arg $2 string Fecha de la intervencion (YYYY-MM-DD).
 # @arg $3 string Hora de la intervencion (HH:MM), se programará una duración de una hora.
 # @arg $4 string Opcional, Descripcion larga de la intervencion, si no se pasa se usa el mensaje de $1.
+# @arg $5 string Opcional, Si se le pasa el valor "cb" incluye a CloudBuilder en el aviso
 #
 jirasendnotice () {
 
@@ -56,6 +57,12 @@ jirasendnotice () {
                     description=$1
                 fi
 
+                local watchers='{ "name": "ArsysPlannedChanges"}, { "name": "dsainzpajares" }, { "name": "flestadomahave" }, { "name": "gagredalabrador" }, { "name": "gbastidarodriguez" }, { "name": "iramirezsuarez" }, { "name": "joriamartinez" }, { "name": "svictormaria" }, { "name": "ivorozbueno" }, { "name": "mfresnedamartinez" }, { "name": "dmartinezechavarria" }, { "name": "jbelmontegoyeneche" }'
+                local teams=(cb)
+                if [[ " ${teams[@]} " =~ " ${5} " ]]; then
+                    local watchers='{ "name": "ArsysPlannedChanges"}, { "name": "dsainzpajares" }, { "name": "flestadomahave" }, { "name": "gagredalabrador" }, { "name": "gbastidarodriguez" }, { "name": "iramirezsuarez" }, { "name": "joriamartinez" }, { "name": "svictormaria" }, { "name": "ivorozbueno" }, { "name": "mfresnedamartinez" }, { "name": "dmartinezechavarria" }, { "name": "jbelmontegoyeneche" }, { "name": "cbenitohernandez" }, { "name": "andrmoralrodriguez" }, { "name": "aramirezfernandez" }, { "name": "egomezcejudo" }, { "name": "ldan" }, { "name": "cmartinezibanez" }'
+                fi
+
                 # Sumamos una hora al inicio
                 local timeParts=(${time//:/ })
                 local hourPart=${timeParts[0]}
@@ -96,15 +103,17 @@ jirasendnotice () {
                         "summary": "'$message'",
                         "description": "'$description'",
                         "issuetype": { "id": "11408" },
-                        "customfield_13809": { "id": "13304" },
+                        "customfield_13809": { "id": "13302" },
                         "customfield_13811": [{ "id": "13469" }],
                         "customfield_11912": { "name": "Auto-Domain - Arsys Products and Tools Development" },
                         "customfield_13806": "'$date'T'$time':00.908'$timeOffset'",
                         "customfield_13807": "'$date'T'$finishTime':00.908'$timeOffset'",
                         "labels": ["ARSYS", "PIENSA"],
-                        "customfield_13826": [ {"name": "ArsysPlannedChanges"}, {"name": "dsainzpajares" }, {"name": "flestadomahave" }, {"name": "gagredalabrador" }, {"name": "gbastidarodriguez" }, {"name": "iramirezsuarez" }, {"name": "joriamartinez" }, {"name": "svictormaria" }, {"name": "ivorozbueno" }, {"name": "mfresnedamartinez" }, {"name": "dmartinezechavarria" }, {"name": "jbelmontegoyeneche" } ]
+                        "customfield_13826": [ '$watchers' ]
                     }
                 }'
+
+                echo $data
 
                 local response=$(curl --location --request POST "$JIRAHOST/rest/api/latest/issue" \
                 --insecure --silent \
@@ -112,7 +121,7 @@ jirasendnotice () {
                 --header "Content-Type: application/json" \
                 --data "$data")
 
-                printtext $response
+                echo $response
             fi
         fi
     fi
