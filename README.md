@@ -57,6 +57,7 @@
     - [rocketchatsendmessage()](#rocketchatsendmessage())
   - [Servers/Development (servers/development.sh)](#servers/development-(servers/development.sh))
     - [devremakeconfig()](#devremakeconfig())
+    - [devxdebugtunnel()](#devxdebugtunnel())
     - [devsetmemoryvars()](#devsetmemoryvars())
     - [devkeystonegeneratetoken()](#devkeystonegeneratetoken())
     - [devkeystonesetmemory()](#devkeystonesetmemory())
@@ -840,6 +841,7 @@ rocketchatsendmessage "@dmartinezechavarria" "Mensaje de prueba"
 Contiene funciones para interactuar con el servidor de desarrollo
 
 * [devremakeconfig()](#devremakeconfig)
+* [devxdebugtunnel()](#devxdebugtunnel)
 * [devsetmemoryvars()](#devsetmemoryvars)
 * [devkeystonegeneratetoken()](#devkeystonegeneratetoken)
 * [devkeystonesetmemory()](#devkeystonesetmemory)
@@ -856,6 +858,18 @@ Ejecuta el remake de config
 
 ```bash
 devremakeconfig
+```
+
+_Function has no arguments._
+
+## devxdebugtunnel()
+
+Crea un tunel SSH al puerto 9000 del servidor de desarrollo para usar xdebug
+
+### Example
+
+```bash
+devxdebugtunnel
 ```
 
 _Function has no arguments._

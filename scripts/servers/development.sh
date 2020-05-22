@@ -24,6 +24,26 @@ devremakeconfig () {
 }
 
 ## 
+# @description Crea un tunel SSH al puerto 9000 del servidor de desarrollo para usar xdebug
+#
+# @example
+#   devxdebugtunnel
+#
+# @noargs
+#
+devxdebugtunnel () {
+
+    printtitle "Creating SSH tunnel to port 9000"
+
+    printtitleconnect $DEVSERVERHOST $DEVSERVERUSER
+
+    ssh -i $RSAPRIVATEKEY -R 9000:localhost:9000 $DEVSERVERUSER@$DEVSERVERHOST
+
+    printlinebreak
+    printsuccess "SSH tunnel destroyed"
+}
+
+## 
 # @description Setea las variables de memoria necesarias para arrancar AP-2
 #
 # @example
