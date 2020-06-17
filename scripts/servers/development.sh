@@ -84,10 +84,10 @@ devkeystonegeneratetoken () {
 }
 
 ## 
-# @description Genera un nuevo token Kestone para las APIs
+# @description Guarda el token Kestone para las APIs en memoria
 #
 # @example
-#   devkeystonegeneratetoken
+#   devkeystonesetmemory
 #
 # @noargs
 #
@@ -101,6 +101,20 @@ devkeystonesetmemory () {
 
     printlinebreak
     printsuccess "Check Keystone token set in Kibana"
+}
+
+## 
+# @description Genera un nuevo token Kestone para las APIs y lo guarda en memoria. Combina devkeystonegeneratetoken y devkeystonesetmemory
+#
+# @example
+#   devkeystone
+#
+# @noargs
+#
+devkeystone () {
+    devkeystonegeneratetoken
+    printlinebreak
+    devkeystonesetmemory
 }
 
 ## 

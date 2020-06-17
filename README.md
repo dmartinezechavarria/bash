@@ -61,6 +61,7 @@
     - [devsetmemoryvars()](#devsetmemoryvars())
     - [devkeystonegeneratetoken()](#devkeystonegeneratetoken())
     - [devkeystonesetmemory()](#devkeystonesetmemory())
+    - [devkeystone()](#devkeystone())
     - [devcleancache()](#devcleancache())
     - [devlogphp()](#devlogphp())
     - [devremovedomainweb()](#devremovedomainweb())
@@ -845,6 +846,7 @@ Contiene funciones para interactuar con el servidor de desarrollo
 * [devsetmemoryvars()](#devsetmemoryvars)
 * [devkeystonegeneratetoken()](#devkeystonegeneratetoken)
 * [devkeystonesetmemory()](#devkeystonesetmemory)
+* [devkeystone()](#devkeystone)
 * [devcleancache()](#devcleancache)
 * [devlogphp()](#devlogphp)
 * [devremovedomainweb()](#devremovedomainweb)
@@ -900,12 +902,24 @@ _Function has no arguments._
 
 ## devkeystonesetmemory()
 
-Genera un nuevo token Kestone para las APIs
+Guarda el token Kestone para las APIs en memoria
 
 ### Example
 
 ```bash
-devkeystonegeneratetoken
+devkeystonesetmemory
+```
+
+_Function has no arguments._
+
+## devkeystone()
+
+Genera un nuevo token Kestone para las APIs y lo guarda en memoria. Combina devkeystonegeneratetoken y devkeystonesetmemory
+
+### Example
+
+```bash
+devkeystone
 ```
 
 _Function has no arguments._
