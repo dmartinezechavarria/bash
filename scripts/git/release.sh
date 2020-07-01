@@ -73,7 +73,7 @@ gitreleasenextversion () {
 #   
 #   #Actualizar Changelog arriba y abajo
 #   git add .
-#   git commit -m "Release changelog"
+#   git commit -m "Release x.x.x"
 #   
 #   #Terminar release 
 #   gitreleasefinish

@@ -6,6 +6,11 @@
     - [adminesversion()](#adminesversion())
     - [admineslistfunctions()](#admineslistfunctions())
   - [Alias (alias.sh)](#alias-(alias.sh))
+  - [Composer/Alias (composer/alias.sh)](#composer/alias-(composer/alias.sh))
+  - [Composer/Helpers (composer/helpers.sh)](#composer/helpers-(composer/helpers.sh))
+    - [composerinstall()](#composerinstall())
+    - [composerupdate()](#composerupdate())
+    - [composerdumpautoload()](#composerdumpautoload())
   - [Git/Alias (git/alias.sh)](#git/alias-(git/alias.sh))
   - [Git/Feature (git/feature.sh)](#git/feature-(git/feature.sh))
     - [gitfeaturestart()](#gitfeaturestart())
@@ -71,12 +76,10 @@
 
 
 
-<a name="contenido"></a>
 # Contenido
 
 Este repositorio contiene una colección de utilidades para Bash.
 
-<a name="como-instalar"></a>
 # Como instalar
 
 * Clonar o descargar el repositorio a una carpeta de tu equipo (preferentemente **z:/bash**).
@@ -145,6 +148,63 @@ admineslistfunctions admindns.pm
 Contiene alias utiles para el resto de scripts y el uso normal de bash
 
 
+
+# Composer/Alias (composer/alias.sh)
+
+Contiene alias para Composer
+
+
+
+# Composer/Helpers (composer/helpers.sh)
+
+Contiene funciones para realizar acciones de composer masivamente sobre los repositorios
+
+* [composerinstall()](#composerinstall)
+* [composerupdate()](#composerupdate)
+* [composerdumpautoload()](#composerdumpautoload)
+
+
+## composerinstall()
+
+Realiza un composer install en los repositorios seleccionados
+
+### Example
+
+```bash
+composerinstall all
+```
+
+### Arguments
+
+* **$1** (string): Opcional, si se pasa el valor all se aplica a todos los repositorios, si no se permite elegir.
+
+## composerupdate()
+
+Realiza un composer update en los repositorios seleccionados
+
+### Example
+
+```bash
+composerupdate all
+```
+
+### Arguments
+
+* **$1** (string): Opcional, si se pasa el valor all se aplica a todos los repositorios, si no se permite elegir.
+
+## composerdumpautoload()
+
+Realiza un composer dump-autoload en los repositorios seleccionados
+
+### Example
+
+```bash
+composerdumpautoload all
+```
+
+### Arguments
+
+* **$1** (string): Opcional, si se pasa el valor all se aplica a todos los repositorios, si no se permite elegir.
 
 # Git/Alias (git/alias.sh)
 
@@ -466,7 +526,7 @@ githotfixstart
 
 #Realizar cambios para el hotfix y actualizar Changelog arriba y abajo
 git add .
-git commit -m "Hotfix changelog"
+git commit -m "Hotfix x.x.x"
 
 #Terminar hotfix 
 githotfixfinish
@@ -539,7 +599,7 @@ gitreleasestart
 
 #Actualizar Changelog arriba y abajo
 git add .
-git commit -m "Release changelog"
+git commit -m "Release x.x.x"
 
 #Terminar release 
 gitreleasefinish

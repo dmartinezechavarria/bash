@@ -31,3 +31,7 @@ source $SCRIPTPATH/scripts/servers/development.sh
 
 # Admines
 source $SCRIPTPATH/scripts/admines.sh
+
+# Composer
+source $SCRIPTPATH/scripts/composer/helpers.sh
+source $SCRIPTPATH/scripts/composer/alias.sh
