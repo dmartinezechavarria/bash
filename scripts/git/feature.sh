@@ -52,13 +52,15 @@ gitfeaturestart () {
                         
                         # Iniciamos la nueva feature
                         local newBranch="feature/$1"
-                        ( set -x; git stash; )
+                        ( set -x; git stash push -m "featurestart-$1"; )
                         ( set -x; git checkout $fromBranch; )
                         ( set -x; git pull; )
                         ( set -x; git checkout -b $newBranch; )
-                        local stashCount=($(git stash list | wc -l))
-                        if (( $stashCount > 0 )); then
-                            ( set -x; git stash apply; )
+
+                        if git stash list | grep -q "featurestart-$1"; then
+                            ( set -x; git stash apply stash^{/featurestart-$1}; )                                                 
+                        else
+                            printwarning "No stash for apply"
                         fi
 
                         printlinebreak
@@ -66,6 +68,7 @@ gitfeaturestart () {
                         printlinebreak
                         printsuccess "Feature $1 started successfully"
                         printlinebreak
+                        printtext "Use$_FONTBOLD_ gitfeaturecancel $1 $2$_FONTDEFAULT_ to cancel the feature"
                         printtext "Use$_FONTBOLD_ gitfeaturefinish $1 $2$_FONTDEFAULT_ to finalize the feature"
                         printtext "Use$_FONTBOLD_ gitfeatureupdate $1 $2$_FONTDEFAULT_ to update feature from origin branch"
                     )
@@ -201,14 +204,16 @@ gitfeatureupdate () {
 
                             printtitle "Update feature $_COLORYELLOW_$1$_COLORDEFAULT_ from branch $_COLORGREEN_$fromBranch$_COLORDEFAULT_"
 
-                            ( set -x; git stash; )
+                            ( set -x; git stash push -m "featureupdate-$1"; )
                             ( set -x; git checkout $fromBranch; )
                             ( set -x; git pull; )
                             ( set -x; git checkout $featureBranch; )
                             ( set -x; git merge --no-ff $fromBranch; ) 
-                            local stashCount=($(git stash list | wc -l))
-                            if (( $stashCount > 0 )); then
-                                ( set -x; git stash apply; )
+                            
+                            if git stash list | grep -q "featureupdate-$1"; then
+                                ( set -x; git stash apply stash^{/featureupdate-$1}; )                                                 
+                            else
+                                printwarning "No stash for apply"
                             fi
 
                             printlinebreak
@@ -282,6 +287,77 @@ gitfeatureremote () {
             else
                 printerror "Feature '$1' no exists"
                 return 1
+            fi
+        fi
+    else
+        printerror "Not a git repository (or any of the parent directories)"
+        return 1
+    fi
+}
+
+##
+# @description Cancelae la feature eliminando la rama y volviendo a la rama origen con los cambios pendientes
+#
+# @example
+#   gitfeaturecancel GPHADPR-2104 dev
+#
+# @arg $1 string Nombre de la feature.
+# @arg $2 string Rama desde la que se inicio la feature.
+#
+gitfeaturecancel () {
+    inside_git_repo="$(git rev-parse --is-inside-work-tree 2>/dev/null)"
+
+    # Comprobamos que estamos en un repo GIT
+    if [ "$inside_git_repo" ]; then
+        # Comprobamos que se pasa un nombre para la feature
+        if [ -z "$1" ]
+        then
+            printerror "No feature name provided"
+            return 1
+        else
+            # Comprobamos si se pasa una rama de destino
+            if [ -z "$2" ]
+            then
+                printerror "No destiny branch provided"
+                return 1
+            else
+                fromBranch=$2
+
+                # Comprobamos que la rama origen existe
+                local branches=($(git branch | grep "[^* ]+" -Eo))
+                if [[ " ${branches[@]} " =~ " ${fromBranch} " ]]; then
+                    # Comprobamos que la rama feature existe
+                    local featureBranch="feature/$1"
+                    if [[ " ${branches[@]} " =~ " ${featureBranch} " ]]; then
+                        ( # try
+                            set -e # Exit if error in any command
+
+                            printtitle "Cancel feature $_COLORYELLOW_$1$_COLORDEFAULT_ and return to branch $_COLORGREEN_$fromBranch$_COLORDEFAULT_"
+
+                            # Cancelamos la feature
+                            ( set -x; git checkout $fromBranch; )
+                            ( set -x; git branch -d $featureBranch; )
+
+                            printlinebreak
+                            printsuccess "Branch $featureBranch removed successfully"
+                            printlinebreak
+                            printsuccess "Feature $1 canceled successfully"
+                        )
+                        errorCode=$?
+                        if [ $errorCode -ne 0 ]; then
+                            printerror "An error occurred while cancel feature $1 and return to branch $fromBranch"
+                            printseparator
+                            printlinebreak
+                            return $errorCode
+                        fi
+                    else
+                        printerror "Feature '$1' no exists"
+                        return 1
+                    fi
+                else
+                    printerror "Origin branch '$fromBranch' no exists"
+                    return 1
+                fi
             fi
         fi
     else

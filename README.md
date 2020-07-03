@@ -17,6 +17,7 @@
     - [gitfeaturefinish()](#gitfeaturefinish())
     - [gitfeatureupdate()](#gitfeatureupdate())
     - [gitfeatureremote()](#gitfeatureremote())
+    - [gitfeaturecancel()](#gitfeaturecancel())
   - [Git/Helpers (git/helpers.sh)](#git/helpers-(git/helpers.sh))
     - [cdgit()](#cdgit())
     - [gitcheckout()](#gitcheckout())
@@ -35,11 +36,13 @@
     - [githotfixstartalert()](#githotfixstartalert())
     - [githotfixstart()](#githotfixstart())
     - [githotfixfinish()](#githotfixfinish())
+    - [githotfixcancel()](#githotfixcancel())
     - [githotfixfinishalert()](#githotfixfinishalert())
   - [Git/Release (git/release.sh)](#git/release-(git/release.sh))
     - [gitreleasestartalert()](#gitreleasestartalert())
     - [gitreleasestart()](#gitreleasestart())
     - [gitreleasefinish()](#gitreleasefinish())
+    - [gitreleasecancel()](#gitreleasecancel())
     - [gitreleasefinishalert()](#gitreleasefinishalert())
   - [Helpers (helpers.sh)](#helpers-(helpers.sh))
     - [printseparator()](#printseparator())
@@ -220,6 +223,7 @@ Contiene funciones para realizar la parte GIT de las features
 * [gitfeaturefinish()](#gitfeaturefinish)
 * [gitfeatureupdate()](#gitfeatureupdate)
 * [gitfeatureremote()](#gitfeatureremote)
+* [gitfeaturecancel()](#gitfeaturecancel)
 
 
 ## gitfeaturestart()
@@ -292,6 +296,21 @@ gitfeatureremote GPHADPR-2104
 ### Arguments
 
 * **$1** (string): Nombre de la feature.
+
+## gitfeaturecancel()
+
+Cancelae la feature eliminando la rama y volviendo a la rama origen con los cambios pendientes
+
+### Example
+
+```bash
+gitfeaturecancel GPHADPR-2104 dev
+```
+
+### Arguments
+
+* **$1** (string): Nombre de la feature.
+* **$2** (string): Rama desde la que se inicio la feature.
 
 # Git/Helpers (git/helpers.sh)
 
@@ -498,6 +517,7 @@ Contiene funciones para realizar la parte GIT de los hotfix
 * [githotfixstartalert()](#githotfixstartalert)
 * [githotfixstart()](#githotfixstart)
 * [githotfixfinish()](#githotfixfinish)
+* [githotfixcancel()](#githotfixcancel)
 * [githotfixfinishalert()](#githotfixfinishalert)
 
 
@@ -552,6 +572,18 @@ githotfixfinish
 
 _Function has no arguments._
 
+## githotfixcancel()
+
+Cancela el hotfix y vuelve a la rama master
+
+### Example
+
+```bash
+githotfixcancel
+```
+
+_Function has no arguments._
+
 ## githotfixfinishalert()
 
 Envia un aviso de final de hotfix a Rocket.Chat en los repositorios seleccionados
@@ -571,6 +603,7 @@ Contiene funciones para realizar la parte GIT de las releases
 * [gitreleasestartalert()](#gitreleasestartalert)
 * [gitreleasestart()](#gitreleasestart)
 * [gitreleasefinish()](#gitreleasefinish)
+* [gitreleasecancel()](#gitreleasecancel)
 * [gitreleasefinishalert()](#gitreleasefinishalert)
 
 
@@ -621,6 +654,18 @@ Finaliza la release, creando una tag y eliminando la rama de la release
 
 ```bash
 gitreleasefinish
+```
+
+_Function has no arguments._
+
+## gitreleasecancel()
+
+Cancela la release y vuelve a la rama dev
+
+### Example
+
+```bash
+gitreleasecancel
 ```
 
 _Function has no arguments._

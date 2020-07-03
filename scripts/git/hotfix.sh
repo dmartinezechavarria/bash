@@ -116,13 +116,15 @@ githotfixstart () {
                     printlinebreak
 
                     # Creamos la nueva rama
-                    ( set -x; git stash; )
+                    ( set -x; git stash push -m "hotfixstart-$newVersion"; )
                     ( set -x; git checkout $fromBranch; )
                     ( set -x; git pull; )
                     ( set -x; git checkout -b $newBranch; )
-                    local stashCount=($(git stash list | wc -l))
-                    if (( $stashCount > 0 )); then
-                        ( set -x; git stash apply; )
+
+                    if git stash list | grep -q "hotfixstart-$newVersion"; then
+                        ( set -x; git stash apply stash^{/hotfixstart-$newVersion}; )                                                 
+                    else
+                        printwarning "No stash for apply"
                     fi
 
                     printlinebreak
@@ -132,6 +134,7 @@ githotfixstart () {
                     printlinebreak
                     printsuccess "Hotfix $newVersion started successfully"
                     printlinebreak
+                    printtext "Use$_FONTBOLD_ githotfixcancel$_FONTDEFAULT_ to cancel the hotfix"
                     printtext "Use$_FONTBOLD_ githotfixfinish$_FONTDEFAULT_ to finalize the hotfix"
                 )
                 errorCode=$?
@@ -220,6 +223,72 @@ githotfixfinish () {
                 errorCode=$?
                 if [ $errorCode -ne 0 ]; then
                     printerror "An error occurred while finishing hotfix $version"
+                    printseparator
+                    printlinebreak
+                    return $errorCode
+                fi
+            else
+                printerror "Branch '$newBranch' not exists, do you modify CHANGELOG.md file?"
+                return 1
+            fi
+
+            cd $pwd
+        else
+            printerror "Merge branch '$fromBranch' no exists"
+            return 1
+        fi
+    else
+        printerror "Not a git repository (or any of the parent directories)"
+        return 1
+    fi
+}
+
+##
+# @description Cancela el hotfix y vuelve a la rama master
+#
+# @example
+#   githotfixcancel
+#
+# @noargs
+#
+githotfixcancel () {
+    inside_git_repo="$(git rev-parse --is-inside-work-tree 2>/dev/null)"
+
+    # Comprobamos que estamos en un repo GIT
+    if [ "$inside_git_repo" ]; then
+        local fromBranch="master"
+
+        # Comprobamos que la rama para mezclar existe
+        local branches=($(git branch | grep "[^* ]+" -Eo))
+        if [[ " ${branches[@]} " =~ " ${fromBranch} " ]]; then
+            # Vamos a la raiz del repo
+            local pwd=$(pwd)
+            local gitroot=$(git rev-parse --show-toplevel)
+            cd $gitroot
+
+            # Calculamos el nombre del hotfix a partir del changelog
+            local version=$(gitversion)
+            local newVersion=$(githotfixnextversion)
+            local newBranch="hotfix/$newVersion"
+
+            if [[ " ${branches[@]} " =~ " ${newBranch} " ]]; then
+                ( # try
+                    set -e # Exit if error in any command
+
+                    printtitle "Canceling hotfix $_FONTBOLD_$newVersion$_FONTDEFAULT_"
+
+                    ( set -x; git checkout $fromBranch; )
+                    ( set -x; git branch -d $newBranch; )
+
+                    printlinebreak
+                    printsuccess "Branch $newBranch removed successfully"
+                    printlinebreak
+                    
+                    printtext "Hotfix $_FONTBOLD_$newVersion$_FONTDEFAULT_ canceled succesfully"
+                )
+                errorCode=$?
+                if [ $errorCode -ne 0 ]; then
+                    printerror "An error occurred while canceling hotfix $newVersion"
                     printseparator
                     printlinebreak
                     return $errorCode
