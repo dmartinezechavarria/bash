@@ -35,3 +35,26 @@ source $SCRIPTPATH/scripts/admines.sh
 # Composer
 source $SCRIPTPATH/scripts/composer/helpers.sh
 source $SCRIPTPATH/scripts/composer/alias.sh
+
+# Updates
+source $SCRIPTPATH/scripts/updater.sh
+
+# Saludo
+if [ -z ${SHOWGREETING+x} ]; then 
+    SHOWGREETING=1
+fi
+
+if [ "$SHOWGREETING" -eq 1 ] ; then
+    printtitle "Wall-e Team | Arsys Products and Tools Development"
+    printwalle
+    printlinebreak
+fi
+
+# Check for updates
+if [ -z ${AUTOUPDATE+x} ]; then 
+    AUTOUPDATE=1
+fi
+
+if [ "$AUTOUPDATE" -eq 1 ] ; then
+    toolscheckupdates
+fi
