@@ -37,6 +37,7 @@ private_githotfixstartalert () {
     fi
     printtext "Sending message for $_COLORYELLOW_$path$_COLORDEFAULT_ to Rocket.Chat channel $_FONTBOLD_$channel$_FONTDEFAULT_"
     rocketchatsendmessage $channel "Preparando hotfix *$newVersion* de *$path*"
+    sleep 1
     printsuccess "Message sent successfully"
 }
 
@@ -343,5 +344,6 @@ private_githotfixfinishalert () {
     fi
     printtext "Sending message for $_COLORYELLOW_$path$_COLORDEFAULT_ to Rocket.Chat channel $_FONTBOLD_$channel$_FONTDEFAULT_"
     rocketchatsendmessage $channel "Desplegado hotfix *$newVersion* de *$path*"
+    sleep 1
     printsuccess "Message sent successfully"
 }

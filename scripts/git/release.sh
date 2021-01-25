@@ -37,6 +37,7 @@ private_gitreleasestartalert () {
     fi
     printtext "Sending message for $_COLORYELLOW_$path$_COLORDEFAULT_ to Rocket.Chat channel $_FONTBOLD_$channel$_FONTDEFAULT_"
     rocketchatsendmessage $channel "Preparando release *$newVersion* de *$path*"
+    sleep 1
     printsuccess "Message sent successfully"
 }
 
@@ -344,5 +345,6 @@ private_gitreleasefinishalert () {
     fi
     printtext "Sending message for $_COLORYELLOW_$path$_COLORDEFAULT_ to Rocket.Chat channel $_FONTBOLD_$channel$_FONTDEFAULT_"
     rocketchatsendmessage $channel "Desplegada release *$newVersion* de *$path*"
+    sleep 1
     printsuccess "Message sent successfully"
 }
