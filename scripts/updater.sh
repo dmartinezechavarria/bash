@@ -21,12 +21,11 @@ toolscheckupdates () {
     local LAST_COMMIT=`git show --no-notes --format=format:"%H" origin/$BRANCH | head -n 1`
 
     git remote update &> /dev/null
-    if [ $LAST_COMMIT != $LAST_UPDATE ]; then
+    if [ "$LAST_COMMIT" != "$LAST_UPDATE" ]; then
         printwarning "New version available"
         printtext "Installing..."
         git pull --no-edit &> /dev/null
         printsuccess "Installation complete"
-        cd $pwd
         clear
         bashrc
     else

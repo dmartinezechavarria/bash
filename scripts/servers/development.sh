@@ -160,6 +160,28 @@ devlogphp () {
 }
 
 ## 
+# @description Muestra el log de procesos del servidor de desarrollo
+#
+# @example
+#   devlogprocess
+#
+# @noargs
+#
+devlogprocess () {
+
+    printtitle "Show process log"
+        
+    printtitleconnect $DEVSERVERHOST $DEVSERVERUSER
+    printtext "Showing process log (Ctrl+c to exit)..."
+    printlinebreak
+
+    ssh -i $RSAPRIVATEKEY $DEVSERVERUSER@$DEVSERVERHOST -t  "echo '' && tail -f /tmp/checkerSch.$ARSYSUSER.log" < /dev/tty
+
+    printlinebreak
+    printsuccess "Bye"
+}
+
+## 
 # @description Elimina la carpeta, el vhost, la configuracion fpm y el usuario de un dominio en una maquina
 #
 # @example
