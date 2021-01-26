@@ -17,7 +17,7 @@ devremakeconfig () {
 
     printtitleconnect $DEVSERVERHOST $DEVSERVERUSER
 
-    ssh -i $RSAPRIVATEKEY $DEVSERVERUSER@$DEVSERVERHOST -t  "cd /usr/share/app/tools/dev_environment/ && sh environmentManager.sh" < /dev/tty
+    ssh -i $RSAPRIVATEKEY $DEVSERVERUSER@$DEVSERVERHOST -t  "cd $DEVSERVERREMAKECONFIGPATH && sh environmentManager.sh" < /dev/tty
 
     printlinebreak
     printsuccess "Remake completed successfully"
@@ -57,7 +57,7 @@ devsetmemoryvars () {
         
     printtitleconnect $DEVSERVERHOST $DEVSERVERUSER
 
-    ssh -i $RSAPRIVATEKEY $DEVSERVERUSER@$DEVSERVERHOST "php72 /usr/share/app/memoria_ap2_.php"
+    ssh -i $RSAPRIVATEKEY $DEVSERVERUSER@$DEVSERVERHOST "php /usr/share/app/memoria_ap2_.php"
 
     printlinebreak
     printsuccess "Memory variables have been set up sucessfully"
@@ -77,7 +77,7 @@ devkeystonegeneratetoken () {
         
     printtitleconnect $DEVSERVERHOST $DEVSERVERUSER
 
-    ssh -i $RSAPRIVATEKEY $DEVSERVERUSER@$DEVSERVERHOST "php72 /usr/share/app/$ARSYSUSER/procws/bin/scripts/generateKeystoneToken.php"
+    ssh -i $RSAPRIVATEKEY $DEVSERVERUSER@$DEVSERVERHOST "php /usr/share/app/$ARSYSUSER/procws/bin/scripts/generateKeystoneToken.php"
 
     printlinebreak
     printsuccess "Check Keystone token generation in Kibana"
@@ -97,7 +97,7 @@ devkeystonesetmemory () {
         
     printtitleconnect $DEVSERVERHOST $DEVSERVERUSER
 
-    ssh -i $RSAPRIVATEKEY $DEVSERVERUSER@$DEVSERVERHOST "php72 /usr/share/app/$ARSYSUSER/procws/bin/scripts/setMemCacheKeystoneToken.php"
+    ssh -i $RSAPRIVATEKEY $DEVSERVERUSER@$DEVSERVERHOST "php /usr/share/app/$ARSYSUSER/procws/bin/scripts/setMemCacheKeystoneToken.php"
 
     printlinebreak
     printsuccess "Check Keystone token set in Kibana"
@@ -153,7 +153,7 @@ devlogphp () {
     printtext "Showing PHP log (Ctrl+c to exit)..."
     printlinebreak
 
-    ssh -i $RSAPRIVATEKEY $DEVSERVERUSER@$DEVSERVERHOST -t  "echo '' && tail -f /var/opt/remi/php72/log/php-fpm/www-error.log" < /dev/tty
+    ssh -i $RSAPRIVATEKEY $DEVSERVERUSER@$DEVSERVERHOST -t  "echo '' && tail -f $DEVSERVERPHPERRORLOGPATH" < /dev/tty
 
     printlinebreak
     printsuccess "Bye"
