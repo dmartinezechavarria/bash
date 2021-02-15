@@ -126,34 +126,3 @@ jirasendnotice () {
         fi
     fi
 }
-
-# rocketchatstart Function
-# -----------------------------------
-# Parametro 1: Nombre para la feature
-# Parametro 2 (opcional): Rama de origen para la feature
-# 
-# Crea una nueva feature a partir de una rama, si no se pasa rama utiliza dev
-# -----------------------------------
-#rocketchatstart () {
-    #local JIRAAuthorization=$(echo -n "$UNITEDUSER:$UNITEDPWD" | openssl base64)
-
-
-    #local response=$(curl --location --request GET "$CONFLUENCEHOST/rest/api/content/48183489?expand=body.storage" \
-    #--insecure --silent \
-    #--header "Authorization: Basic $JIRAAuthorization")
-
-    #local content=$(echo -n $response | grep -Po '"value":.*?[^\\]",')
-    #local table=$(echo -n $content | grep -Po '<tr><td>.*?</td></tr>')
-
-
-    #local lines=($(echo -n $table | grep -Poi "^<tr>.*?<\/tr>"))
-    #echo $table
-
-
-    #local entries=$(awk -F'</tr>' '{print $table}')
-
-    #local td=$(echo -n $content | grep -Po '<ac:task-status>complete</ac:task-status>')
-
-    #printarray ${lines[@]}
-
-#}

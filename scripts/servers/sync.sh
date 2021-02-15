@@ -9,14 +9,14 @@
 # @example
 #   syncservers pdc pre
 #
-# @arg $1 string Proyecto, puede ser pdc o webadmin.
+# @arg $1 string Proyecto, puede ser pdc, webadmin o apiauth.
 # @arg $2 string Entorno, puede ser pre o pro.
 #
 syncservers () {
     # Comprobamos que se pasa un proyecto
     if [ -z "$1" ]
     then
-        printerror "No project provided (pdc | webadmin)"
+        printerror "No project provided (pdc | webadmin | apiauth)"
         return 1
     else
         project=$1
@@ -30,7 +30,7 @@ syncservers () {
             env=$2
 
              # Comprobamos que el proyecto existe
-            local projects=(pdc webadmin)
+            local projects=(pdc webadmin apiauth)
             if ! [[ " ${projects[@]} " =~ " ${project} " ]]; then
                 printerror "Project '$project' no exists"
                 return 1

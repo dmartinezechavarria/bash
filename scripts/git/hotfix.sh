@@ -4,7 +4,7 @@
 # @brief Contiene funciones para realizar la parte GIT de los hotfix
 
 ##
-# @description Envia un aviso de comienzo de hotfix a Rocket.Chat en los repositorios seleccionados
+# @description Envia un aviso de comienzo de hotfix al chat en los repositorios seleccionados
 #
 # @example
 #   githotfixstartalert
@@ -23,20 +23,20 @@ githotfixstartalert () {
 ##
 # @internal
 #
-# @description Envia un aviso de comienzo de hotfix a Rocket.Chat en un repositorio pasado como parametro
+# @description Envia un aviso de comienzo de hotfix al chat en un repositorio pasado como parametro
 #
 # @arg $1 string Ruta al repositorio.
 #
 private_githotfixstartalert () {
     local path=$1
     local newVersion=$(githotfixnextversion)
-    local channel=$ROCKETCHATCHANNELAP2
+    local webhook="$GOOGLECHATWEBHOOKAP2"
     local path=$(basename "`pwd`")
     if [[ " ${COMMONPROJECTS[@]} " =~ " ${path} " ]]; then
-        channel=$ROCKETCHATCHANNELCOMMON
+        webhook="$GOOGLECHATWEBHOOKCOMMON"
     fi
-    printtext "Sending message for $_COLORYELLOW_$path$_COLORDEFAULT_ to Rocket.Chat channel $_FONTBOLD_$channel$_FONTDEFAULT_"
-    rocketchatsendmessage $channel "Preparando hotfix *$newVersion* de *$path*"
+    printtext "Sending message for $_COLORYELLOW_$path$_COLORDEFAULT_ to Google Chat webhook"
+    googlechatwebhookmessage $webhook "Preparando hotfix *$newVersion* de *$path*"
     sleep 1
     printsuccess "Message sent successfully"
 }
@@ -311,7 +311,7 @@ githotfixcancel () {
 }
 
 ##
-# @description Envia un aviso de final de hotfix a Rocket.Chat en los repositorios seleccionados
+# @description Envia un aviso de final de hotfix al chat en los repositorios seleccionados
 #
 # @example
 #   githotfixfinishalert
@@ -330,20 +330,20 @@ githotfixfinishalert () {
 ##
 # @internal
 #
-# @description Envia un aviso de final de hotfix a Rocket.Chat en un repositorio pasado como parametro
+# @description Envia un aviso de final de hotfix al chat en un repositorio pasado como parametro
 #
 # @arg $1 string Ruta al repositorio.
 #
 private_githotfixfinishalert () {
     local path=$1
     local newVersion=$(gitversion)
-    local channel=$ROCKETCHATCHANNELAP2
+    local webhook="$GOOGLECHATWEBHOOKAP2"
     local path=$(basename "`pwd`")
     if [[ " ${COMMONPROJECTS[@]} " =~ " ${path} " ]]; then
-        channel=$ROCKETCHATCHANNELCOMMON
+        webhook="$GOOGLECHATWEBHOOKCOMMON"
     fi
-    printtext "Sending message for $_COLORYELLOW_$path$_COLORDEFAULT_ to Rocket.Chat channel $_FONTBOLD_$channel$_FONTDEFAULT_"
-    rocketchatsendmessage $channel "Desplegado hotfix *$newVersion* de *$path*"
+    printtext "Sending message for $_COLORYELLOW_$path$_COLORDEFAULT_ to Google Chat webhook"
+    googlechatwebhookmessage $webhook "Desplegado hotfix *$newVersion* de *$path*"
     sleep 1
     printsuccess "Message sent successfully"
 }

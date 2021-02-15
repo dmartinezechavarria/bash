@@ -1,7 +1,7 @@
 # Índice
 
-  - [Contenido](#contenido)
-  - [Como instalar](#como-instalar)
+  - [Contenido](#contenido)
+  - [Como instalar](#como-instalar)
   - [Admines (admines.sh)](#admines-(admines.sh))
     - [adminesversion()](#adminesversion())
     - [admineslistfunctions()](#admineslistfunctions())
@@ -44,6 +44,8 @@
     - [gitreleasefinish()](#gitreleasefinish())
     - [gitreleasecancel()](#gitreleasecancel())
     - [gitreleasefinishalert()](#gitreleasefinishalert())
+  - [Googlechat (googlechat.sh)](#googlechat-(googlechat.sh))
+    - [googlechatwebhookmessage()](#googlechatwebhookmessage())
   - [Helpers (helpers.sh)](#helpers-(helpers.sh))
     - [printseparator()](#printseparator())
     - [printlinebreak()](#printlinebreak())
@@ -72,10 +74,12 @@
     - [devkeystone()](#devkeystone())
     - [devcleancache()](#devcleancache())
     - [devlogphp()](#devlogphp())
+    - [devlogprocess()](#devlogprocess())
     - [devremovedomainweb()](#devremovedomainweb())
   - [Servers/Sync (servers/sync.sh)](#servers/sync-(servers/sync.sh))
     - [syncservers()](#syncservers())
   - [Styles (styles.sh)](#styles-(styles.sh))
+  - [Updater (updater.sh)](#updater-(updater.sh))
 
 
 
@@ -523,7 +527,7 @@ Contiene funciones para realizar la parte GIT de los hotfix
 
 ## githotfixstartalert()
 
-Envia un aviso de comienzo de hotfix a Rocket.Chat en los repositorios seleccionados
+Envia un aviso de comienzo de hotfix al chat en los repositorios seleccionados
 
 ### Example
 
@@ -586,7 +590,7 @@ _Function has no arguments._
 
 ## githotfixfinishalert()
 
-Envia un aviso de final de hotfix a Rocket.Chat en los repositorios seleccionados
+Envia un aviso de final de hotfix al chat en los repositorios seleccionados
 
 ### Example
 
@@ -609,7 +613,7 @@ Contiene funciones para realizar la parte GIT de las releases
 
 ## gitreleasestartalert()
 
-Envia un aviso de comienzo de release a Rocket.Chat en los repositorios seleccionados
+Envia un aviso de comienzo de release al cChat en los repositorios seleccionados
 
 ### Example
 
@@ -672,7 +676,7 @@ _Function has no arguments._
 
 ## gitreleasefinishalert()
 
-Envia un aviso de final de release a Rocket.Chat en los repositorios seleccionados
+Envia un aviso de final de release al chat en los repositorios seleccionados
 
 ### Example
 
@@ -681,6 +685,28 @@ gitreleasefinishalert
 ```
 
 _Function has no arguments._
+
+# Googlechat (googlechat.sh)
+
+Contiene funciones para realizar acciones sobre la plataforma Google Chat
+
+* [googlechatwebhookmessage()](#googlechatwebhookmessage)
+
+
+## googlechatwebhookmessage()
+
+Envia un mensaje a un webhook de Google Chat
+
+### Example
+
+```bash
+googlechatwebhookmessage "https://chat.googleapis.com/v1/spaces/AAAAKEfZZXM/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=TQ7fU3qe_i5PKjaOyjW9yqNn7XaFPzU-lyd8xGsi9UA%3D" "Mensaje de prueba"
+```
+
+### Arguments
+
+* **$1** (string): Webhook.
+* **$2** (string): Mensaje a enviar.
 
 # Helpers (helpers.sh)
 
@@ -954,6 +980,7 @@ Contiene funciones para interactuar con el servidor de desarrollo
 * [devkeystone()](#devkeystone)
 * [devcleancache()](#devcleancache)
 * [devlogphp()](#devlogphp)
+* [devlogprocess()](#devlogprocess)
 * [devremovedomainweb()](#devremovedomainweb)
 
 
@@ -1053,6 +1080,18 @@ devlogphp
 
 _Function has no arguments._
 
+## devlogprocess()
+
+Muestra el log de procesos del servidor de desarrollo
+
+### Example
+
+```bash
+devlogprocess
+```
+
+_Function has no arguments._
+
 ## devremovedomainweb()
 
 Elimina la carpeta, el vhost, la configuracion fpm y el usuario de un dominio en una maquina
@@ -1087,12 +1126,18 @@ syncservers pdc pre
 
 ### Arguments
 
-* **$1** (string): Proyecto, puede ser pdc o webadmin.
+* **$1** (string): Proyecto, puede ser pdc, webadmin o apiauth.
 * **$2** (string): Entorno, puede ser pre o pro.
 
 # Styles (styles.sh)
 
 Variables con estilos para las salidas de los comandos
+
+
+
+# Updater (updater.sh)
+
+Contiene funciones para actualizar las tools
 
 
 

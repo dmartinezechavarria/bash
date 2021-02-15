@@ -9,8 +9,9 @@ source $SCRIPTPATH/scripts/alias.sh
 # Variables
 source $SCRIPTPATH/scripts/styles.sh
 
-# Rocketchat
+# Chat
 source $SCRIPTPATH/scripts/rocketchat.sh
+source $SCRIPTPATH/scripts/googlechat.sh
 
 # JIRA
 source $SCRIPTPATH/scripts/jira.sh

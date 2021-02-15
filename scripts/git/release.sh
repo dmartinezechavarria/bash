@@ -4,7 +4,7 @@
 # @brief Contiene funciones para realizar la parte GIT de las releases
 
 ##
-# @description Envia un aviso de comienzo de release a Rocket.Chat en los repositorios seleccionados
+# @description Envia un aviso de comienzo de release al cChat en los repositorios seleccionados
 #
 # @example
 #   gitreleasestartalert
@@ -23,20 +23,20 @@ gitreleasestartalert () {
 ##
 # @internal
 #
-# @description Envia un aviso de comienzo de release a Rocket.Chat en un repositorio pasado como parametro
+# @description Envia un aviso de comienzo de release al chat en un repositorio pasado como parametro
 #
 # @arg $1 string Ruta al repositorio.
 #
 private_gitreleasestartalert () {
     local path=$1
     local newVersion=$(gitreleasenextversion)
-    local channel=$ROCKETCHATCHANNELAP2
+    local webhook="$GOOGLECHATWEBHOOKAP2"
     local path=$(basename "`pwd`")
     if [[ " ${COMMONPROJECTS[@]} " =~ " ${path} " ]]; then
-        channel=$ROCKETCHATCHANNELCOMMON
+        webhook="$GOOGLECHATWEBHOOKCOMMON"
     fi
-    printtext "Sending message for $_COLORYELLOW_$path$_COLORDEFAULT_ to Rocket.Chat channel $_FONTBOLD_$channel$_FONTDEFAULT_"
-    rocketchatsendmessage $channel "Preparando release *$newVersion* de *$path*"
+    printtext "Sending message for $_COLORYELLOW_$path$_COLORDEFAULT_ to Google Chat webhook"
+    googlechatwebhookmessage $webhook "Preparando release *$newVersion* de *$path*"
     sleep 1
     printsuccess "Message sent successfully"
 }
@@ -312,7 +312,7 @@ gitreleasecancel () {
 }
 
 ##
-# @description Envia un aviso de final de release a Rocket.Chat en los repositorios seleccionados
+# @description Envia un aviso de final de release al chat en los repositorios seleccionados
 #
 # @example
 #   gitreleasefinishalert
@@ -331,20 +331,20 @@ gitreleasefinishalert () {
 ##
 # @internal
 #
-# @description Envia un aviso de final de release a Rocket.Chat en un repositorio pasado como parametro
+# @description Envia un aviso de final de release al chat en un repositorio pasado como parametro
 #
 # @arg $1 string Ruta al repositorio.
 #
 private_gitreleasefinishalert () {
     local path=$1
     local newVersion=$(gitversion)
-    local channel=$ROCKETCHATCHANNELAP2
+    local webhook="$GOOGLECHATWEBHOOKAP2"
     local path=$(basename "`pwd`")
     if [[ " ${COMMONPROJECTS[@]} " =~ " ${path} " ]]; then
-        channel=$ROCKETCHATCHANNELCOMMON
+        webhook="$GOOGLECHATWEBHOOKCOMMON"
     fi
-    printtext "Sending message for $_COLORYELLOW_$path$_COLORDEFAULT_ to Rocket.Chat channel $_FONTBOLD_$channel$_FONTDEFAULT_"
-    rocketchatsendmessage $channel "Desplegada release *$newVersion* de *$path*"
+    printtext "Sending message for $_COLORYELLOW_$path$_COLORDEFAULT_ to Google Chat webhook"
+    googlechatwebhookmessage $webhook "Desplegada release *$newVersion* de *$path*"
     sleep 1
     printsuccess "Message sent successfully"
 }
