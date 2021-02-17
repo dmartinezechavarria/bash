@@ -76,6 +76,9 @@
     - [devlogphp()](#devlogphp())
     - [devlogprocess()](#devlogprocess())
     - [devremovedomainweb()](#devremovedomainweb())
+  - [Servers/Machines (servers/machines.sh)](#servers/machines-(servers/machines.sh))
+    - [machinesdnshealthy()](#machinesdnshealthy())
+    - [machinednshealthy()](#machinednshealthy())
   - [Servers/Sync (servers/sync.sh)](#servers/sync-(servers/sync.sh))
     - [syncservers()](#syncservers())
   - [Styles (styles.sh)](#styles-(styles.sh))
@@ -1106,6 +1109,42 @@ devremovedomainweb entornox255.arsysdesarrollo.lan c4a-davidpes01.com
 
 * **$1** (string): Host de la maquina en la que se quiere eliminar el dominio.
 * **$2** (string): Dominio a eliminar.
+
+# Servers/Machines (servers/machines.sh)
+
+Contiene funciones para interactuar con máquinas
+
+* [machinesdnshealthy()](#machinesdnshealthy)
+* [machinednshealthy()](#machinednshealthy)
+
+
+## machinesdnshealthy()
+
+Comprueba la salud de DNS de las máquinas pasadas en un csv con tres columnas separadas por tabuladores (hostname, hostname de servicio, IP pública)
+
+### Example
+
+```bash
+machinesdnshealthy < ~/machines.csv > ~/maquinas_erroneas.csv
+```
+
+_Function has no arguments._
+
+## machinednshealthy()
+
+Comprueba la salud de DNS de una máquina
+
+### Example
+
+```bash
+machinednshealthy atlante.servidoresdns.net atlante.arsys.server.lan 217.76.128.10
+```
+
+### Arguments
+
+* **$1** (string): Hostname de la máquina.
+* **$2** (string): Hostname de servicio con el cambiazo.
+* **$3** (string): IP pública de la máquina.
 
 # Servers/Sync (servers/sync.sh)
 
