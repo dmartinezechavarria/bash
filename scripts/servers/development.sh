@@ -1,4 +1,4 @@
-#!/bin/bas
+#!/bin/bash
 #
 # @file Servers/Development (servers/development.sh)
 # @brief Contiene funciones para interactuar con el servidor de desarrollo

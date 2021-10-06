@@ -1,4 +1,4 @@
-#!/bin/bas
+#!/bin/bash
 #
 # @file Servers/Sync (servers/sync.sh)
 # @brief Contiene funciones para la sincronizacion de los servidores
