@@ -26,6 +26,8 @@
     - [gitversion()](#gitversion())
     - [gitbranch()](#gitbranch())
     - [gitbranchall()](#gitbranchall())
+    - [gitremote()](#gitremote())
+    - [gitremoteall()](#gitremoteall())
     - [gitpull()](#gitpull())
     - [gitstatus()](#gitstatus())
     - [gitlog()](#gitlog())
@@ -65,6 +67,7 @@
     - [jirasendnotice()](#jirasendnotice())
   - [Rocketchat (rocketchat.sh)](#rocketchat-(rocketchat.sh))
     - [rocketchatsendmessage()](#rocketchatsendmessage())
+  - [Servers/Deploy (servers/deploy.sh)](#servers/deploy-(servers/deploy.sh))
   - [Servers/Development (servers/development.sh)](#servers/development-(servers/development.sh))
     - [devremakeconfig()](#devremakeconfig())
     - [devxdebugtunnel()](#devxdebugtunnel())
@@ -330,6 +333,8 @@ Contiene funciones generales de GIT
 * [gitversion()](#gitversion)
 * [gitbranch()](#gitbranch)
 * [gitbranchall()](#gitbranchall)
+* [gitremote()](#gitremote)
+* [gitremoteall()](#gitremoteall)
 * [gitpull()](#gitpull)
 * [gitstatus()](#gitstatus)
 * [gitlog()](#gitlog)
@@ -424,6 +429,32 @@ _Function has no arguments._
 ## gitbranchall()
 
 Devuelve la rama de todos los repositorios
+
+### Example
+
+```bash
+gitbranchall
+```
+
+_Function has no arguments._
+
+## gitremote()
+
+Devuelve el remoto de los repositorios seleccionados
+
+### Example
+
+```bash
+gitremote all
+```
+
+### Arguments
+
+* **$1** (string): Opcional, si se pasa el valor all se aplica a todos los repositorios, si no se permite elegir.
+
+## gitremoteall()
+
+Devuelve el remoto de todos los repositorios
 
 ### Example
 
@@ -970,6 +1001,12 @@ rocketchatsendmessage "@dmartinezechavarria" "Mensaje de prueba"
 
 * **$1** (string): Canal, puede ser un canal (ap2_arsys) o un usuario (@dmartinezechavarria).
 * **$2** (string): Mensaje a enviar.
+
+# Servers/Deploy (servers/deploy.sh)
+
+Contiene funciones para realizar subidas
+
+
 
 # Servers/Development (servers/development.sh)
 

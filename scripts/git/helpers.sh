@@ -422,6 +422,79 @@ gitbranchall () {
 ##
 # @internal
 #
+# @description Muestra el remote del repositorio
+#
+# @arg $1 string Repositorio.
+#
+private_gitremote () {
+    local repository=$1
+
+    ( # try
+        set -e # Exit if error in any command
+
+        local resume="$(private_gitresume $repository)"
+        printtitle "$resume"
+
+        ( set -x; git remote -v; )
+
+        printseparator
+        printlinebreak
+    )
+    errorCode=$?
+    if [ $errorCode -ne 0 ]; then
+        printerror "An error occurred while pull $repository"
+        printseparator
+        printlinebreak
+        return $errorCode
+    fi
+}
+
+## 
+# @description Devuelve el remoto de los repositorios seleccionados
+#
+# @example
+#   gitremote all
+#
+# @arg $1 string Opcional, si se pasa el valor all se aplica a todos los repositorios, si no se permite elegir.
+#
+gitremote () {
+    printtitle "Git remote"
+
+    local selectedRepositories=()
+    if [ -z "$1" ] 
+    then
+        private_gitpickpaths selectedRepositories
+    else
+        if [ $1 = "all" ]; 
+        then
+            selectedRepositories=( $(private_gitpaths) )
+        fi
+    fi
+
+    printlinebreak
+
+    if [ ${#selectedRepositories[@]} -eq 0 ]; then
+        printerror "No repositories picked"
+    else
+        private_gitlooppaths "private_gitremote" "" "$(echo ${selectedRepositories[@]})"
+    fi
+}
+
+## 
+# @description Devuelve el remoto de todos los repositorios
+#
+# @example
+#   gitbranchall
+#
+# @noargs
+#
+gitremoteall () {
+    private_gitlooppaths "private_gitremote"
+}
+
+##
+# @internal
+#
 # @description Hace pull en un repositorio
 #
 # @arg $1 string Repositorio.
