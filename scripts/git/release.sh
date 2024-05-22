@@ -176,7 +176,7 @@ gitreleasefinish () {
 
     # Comprobamos que estamos en un repo GIT
     if [ "$inside_git_repo" ]; then
-        local fromBranch="master"
+        local fromBranch=$GITMAINBRANCH
 
         # Comprobamos que la rama para mezclar existe
         local branches=($(git branch | grep "[^* ]+" -Eo))
@@ -259,7 +259,7 @@ gitreleasecancel () {
 
     # Comprobamos que estamos en un repo GIT
     if [ "$inside_git_repo" ]; then
-        local fromBranch="master"
+        local fromBranch=$GITMAINBRANCH
 
         # Comprobamos que la rama para mezclar existe
         local branches=($(git branch | grep "[^* ]+" -Eo))

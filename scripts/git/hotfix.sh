@@ -63,7 +63,7 @@ githotfixnextversion () {
 }
 
 ##
-# @description Crea un nuevo hotfix a partir de la rama master
+# @description Crea un nuevo hotfix a partir de la rama principal
 #
 # @example
 #   #Iniciar hotfix
@@ -90,7 +90,7 @@ githotfixstart () {
 
     # Comprobamos que estamos en un repo GIT
     if [ "$inside_git_repo" ]; then
-        local fromBranch="master"
+        local fromBranch=$GITMAINBRANCH
         
         # Comprobamos que la rama origen existe
         local branches=($(git branch | grep "[^* ]+" -Eo))
@@ -174,7 +174,7 @@ githotfixfinish () {
 
     # Comprobamos que estamos en un repo GIT
     if [ "$inside_git_repo" ]; then
-        local fromBranch="master"
+        local fromBranch=$GITMAINBRANCH
 
         # Comprobamos que la rama para mezclar existe
         local branches=($(git branch | grep "[^* ]+" -Eo))
@@ -245,7 +245,7 @@ githotfixfinish () {
 }
 
 ##
-# @description Cancela el hotfix y vuelve a la rama master
+# @description Cancela el hotfix y vuelve a la rama principal
 #
 # @example
 #   githotfixcancel
@@ -257,7 +257,7 @@ githotfixcancel () {
 
     # Comprobamos que estamos en un repo GIT
     if [ "$inside_git_repo" ]; then
-        local fromBranch="master"
+        local fromBranch=$GITMAINBRANCH
 
         # Comprobamos que la rama para mezclar existe
         local branches=($(git branch | grep "[^* ]+" -Eo))

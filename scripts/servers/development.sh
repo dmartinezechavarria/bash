@@ -33,11 +33,11 @@ devremakeconfig () {
 #
 devxdebugtunnel () {
 
-    printtitle "Creating SSH tunnel to port 9000"
+    printtitle "Creating SSH tunnel to port 9003"
 
     printtitleconnect $DEVSERVERHOST $DEVSERVERUSER
 
-    ssh -i $RSAPRIVATEKEY -R 9000:localhost:9000 $DEVSERVERUSER@$DEVSERVERHOST
+    ssh -i $RSAPRIVATEKEY -R 9003:localhost:9003 $DEVSERVERUSER@$DEVSERVERHOST
 
     printlinebreak
     printsuccess "SSH tunnel destroyed"
