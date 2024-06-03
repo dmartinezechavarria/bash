@@ -52,13 +52,15 @@ gitfeaturestart () {
                         
                         # Iniciamos la nueva feature
                         local newBranch="feature/$1"
-                        ( set -x; git stash push -m "featurestart-$1"; )
+						local stashId=$(date +%s)
+						local stashName="featurestart-$1-$stashId"
+                        ( set -x; git stash push -m $stashName; )
                         ( set -x; git checkout $fromBranch; )
                         ( set -x; git pull; )
                         ( set -x; git checkout -b $newBranch; )
 
-                        if git stash list | grep -q "featurestart-$1"; then
-                            ( set -x; git stash apply stash^{/featurestart-$1}; )                                                 
+                        if git stash list | grep -q $stashName; then
+                            ( set -x; git stash apply stash^{/featurestart-$1-$stashId}; )                                                 
                         else
                             printwarning "No stash for apply"
                         fi
@@ -204,14 +206,16 @@ gitfeatureupdate () {
 
                             printtitle "Update feature $_COLORYELLOW_$1$_COLORDEFAULT_ from branch $_COLORGREEN_$fromBranch$_COLORDEFAULT_"
 
-                            ( set -x; git stash push -m "featureupdate-$1"; )
+							local stashId=$(date +%s)
+							local stashName="featureupdate-$1-$stashId"
+                            ( set -x; git stash push -m $stashName; )
                             ( set -x; git checkout $fromBranch; )
                             ( set -x; git pull; )
                             ( set -x; git checkout $featureBranch; )
                             ( set -x; git merge --no-ff $fromBranch; ) 
                             
-                            if git stash list | grep -q "featureupdate-$1"; then
-                                ( set -x; git stash apply stash^{/featureupdate-$1}; )                                                 
+                            if git stash list | grep -q $stashName; then
+                                ( set -x; git stash apply stash^{/featureupdate-$1-$stashId}; )                                                 
                             else
                                 printwarning "No stash for apply"
                             fi
