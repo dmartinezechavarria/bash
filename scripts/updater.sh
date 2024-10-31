@@ -16,7 +16,7 @@ toolscheckupdates () {
 
     printtext "Checking for updates..."
 
-    local BRANCH="master"
+    local BRANCH="main"
     local LAST_UPDATE=`git show --no-notes --format=format:"%H" $BRANCH | head -n 1`
     local LAST_COMMIT=`git show --no-notes --format=format:"%H" origin/$BRANCH | head -n 1`
 
